@@ -72,9 +72,9 @@ def _get_options_block(options: list[Meal]) -> list[dict[str, str]]:
                 'type': 'mrkdwn',
                 'text': f'''
 *{option.corner}*
-- {option.name}
-- {option.side}
-- _{option.kcal} 칼로리_
+• {option.name}
+• {option.side}
+_{option.kcal} 칼로리_
 '''[1:]
             }
         })
@@ -101,5 +101,4 @@ def _webhook_response_to_dict(instance: WebhookResponse):
         'api_url': instance.api_url,
         'status_code': instance.status_code,
         'body': instance.body,
-        'headers': instance.headers,
     }
