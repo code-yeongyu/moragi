@@ -36,6 +36,7 @@ select = ["PLE", "PLR", "PLW", "E", "W", "F", "I", "Q", "C", "B"]
 [tool.poetry.dependencies]
 python = "^3.9"
 poetry = "^1.4.0"
+pydantic = "^1.10.5"
 
 [tool.poetry.scripts]
 moragi = "moragi:main"
