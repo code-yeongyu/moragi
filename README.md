@@ -1,74 +1,46 @@
-# Python Poetry Template
+# 모락이 🍚
 
-This template is designed to make it easy to set up a Python project that is well-structured, organized, and easy to maintain. It comes pre-configured with several tools that will help you develop your project more efficiently, including:
+모락이는 [CJ 프레시밀](https://front.cjfreshmeal.co.kr/)에서 오늘의 식단 정보를 가져와 슬랙 웹훅을 통해 전송하는 기능을 제공합니다. ✨
 
-- Visual Studio Code integration: with the `RunOnSave`, `even-better-toml` and `ruff` extensions installed, you can format, lint, and type-check your code automatically every time you save a file.
-- Type checking: this template is configured to use `mypy` and `pyright` to automatically infer types when possible, without imposing strict typing requirements on your code.
-- Linting: `ruff`, an extremely fast Python linter, written in Rust is configured well to help you catch and fix code style issues.
-- Formatting: `yapf`, `ruff`, and `unify` are configured to help you keep your code clean and well-organized.
-- Testing: `pytest` is configured to make it easy to run tests, and `pytest-cov` is configured to help you measure code coverage.
-- Dependency management: `poetry` is configured to help you manage your project's dependencies.
-- Toolkits: `invoke` is configured to provide a range of useful tasks, such as running your code, running tests, formatting your code, and checking your code style and types. These tasks are fully configurable in the [tasks.py](tasks.py) file.
+본 프로젝트에 설정된 [깃허브 액션](https://github.com/code-yeongyu/moragi/blob/master/.github/workflows/daily_job.yml)의 cron schedule 설정에 따라 평일 한국시간 9시마다 되고있어요. 따라서, 별도의 서버 없이 작동하고 있는 중입니다!
 
-## Installation
+현재는 [무신사](https://musinsa.com)의 구내식당인 '모락모락'의 식단 정보를 가져오고 있습니다. 🍚
 
-To install this template, simply follow these steps:
+## 사용법 📖
 
-```sh
-git clone git@github.com:code-yeongyu/Python-Poetry-Template.git
-cd Python-Poetry-Template
-poetry install
-code --install-extension emeraldwalk.RunOnSave
-code --install-extension tamasfe.even-better-toml
-code --install-extension charliermarsh.ruff
-```
+### 사전 준비물 🔨
 
-## Usage
+1. 슬랙 워크스페이스
+1. 슬랙 웹훅 URL
+    1. 없다면 생성해주세요! 구글에 좋은 가이드가 많습니다.
+1. *CJ 프레시밀을 사용하는 구내식당*
+    - 안타깝게도 이건 구글링 하셔도 생성이 불가능합니다 !
 
-To use this template, you can follow these steps:
+### 시작 🚀
 
-### Open Shell
+아래 이미지 처럼 `Use this template` -> `Create a new repository` 를 통해 본 저장소를 복제합니다.
+![clone](https://raw.githubusercontent.com/code-yeongyu/moragi/master/images/clone.png)
 
-To open a shell in the project directory, use the following command:
+복제한 저장소의 `Settings` -> `Secrets` 에서 `SLACK_WEBHOOK_URL` 에 슬랙 웹훅 URL 을 추가해주세요! 그렇다면 아래와 같을것입니다.
+
+![secrets](https://raw.githubusercontent.com/code-yeongyu/moragi/master/images/actions-secrets.png)
+
+이제는 지금 회사의 식당 정보를 등록해야 하는데요! curl 와 jq 를 이용해서 `CJ_FRESH_MEAL_STORE_ID` 를 알아내야 합니다. 없다면 미리 설치해주시고, 다음의 명령어를 입력해주세요!
 
 ```sh
-poetry shell
+curl 'https://front.cjfreshmeal.co.kr/store/v1/search-store?page=1&schKey=%EB%AC%B4%EC%8B%A0%EC%82%AC&isList=false' | jq '.data.storeList[0].idx'
 ```
 
-### Name your project
+그러면 아래 사진과 같이, 결과값이 나옵니다. 이 중 숫자값만 복사해주세요.
 
-```sh
-invoke rename-project <your-project-name>
-```
+![store_id](https://raw.githubusercontent.com/code-yeongyu/moragi/master/images/store-id.png)
 
-### Run Code
+이번에는 `Settings` -> `Variables` 에서 `CJ_FRESH_MEAL_STORE_ID` 에 해당 값을 추가해주세요!
 
-To run your code, use the following command:
+![variables](https://raw.githubusercontent.com/code-yeongyu/moragi/master/images/actions-variables.png)
 
-```sh
-poetry run invoke run
-```
+이제 모두 설정이 끝났습니다! 이제 아래 사진처럼 `Actions` -> `일해라 모락이` -> `Run workflow` 을 통해 실행해보세요! 혹은 설정된 cron schedule 에 따라 자동으로 실행됩니다. 기본값은 평일 9시입니다!
 
-### Run Tests
+![work-moragi](https://raw.githubusercontent.com/code-yeongyu/moragi/master/images/work-moragi.png)
 
-To run your tests, use the following command:
-
-```sh
-poetry run invoke test
-```
-
-### Run Formatters
-
-To run the code formatters, use the following command:
-
-```sh
-poetry run invoke format_code
-```
-
-### Run Checking Code Style & Type hint
-
-To check your code style and type hints, use the following command:
-
-```sh
-poetry run invoke check
-```
+이제 밥 먹으러 가볼까요!! 😋
