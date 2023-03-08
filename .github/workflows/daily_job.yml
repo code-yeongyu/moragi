@@ -1,9 +1,14 @@
-name: Release Package to PyPI
+name: 일해라 모락이
 on:
-  release:
-    types: [created]
+  workflow_dispatch:
+  schedule:
+    # 실제 스케쥴 작업이 시작될 cron을 등록하면 됩니다.
+    # 크론은 https://crontab.guru/ 여기서 확인하면 좋을 것 같습니다.
+    # 이 크론은 평일 0시 (한국시간 9시)에 실행됩니다.
+    - cron: "0 0 * * 1-5"
+
 jobs:
-  release:
+  moragi:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -24,13 +29,11 @@ jobs:
         id: cache-dependencies
         with:
           path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+          key: venv-${{ runner.os }}-${{ hashFiles('./poetry.lock') }}
 
       - name: Install Dependencies if cache doesn't hit
         if: steps.cache-dependencies.cache-hit != 'true'
         run: poetry install
 
-      - name: Publish to PyPI
-        run:
-          poetry config http-basic.pypi ${{ secrets.PYPI_USERNAME }} ${{ secrets.PYPI_PASSWORD }};
-          poetry run invoke release ${{ github.event.release.name }}
+      - name: Run Moragi
+        run: poetry run python3 -m moragi ${{ vars.CJ_FRESH_MEAL_STORE_ID }} ${{ secrets.SLACK_WEBHOOK_URL }}
