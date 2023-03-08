@@ -6,7 +6,7 @@ class Meal(BaseModel):
     mbr_meal_idx: int = Field(alias='mbrMealIdx')
     name: str
     side: str
-    kcal: float
+    kcal: int
     carb: float
     protein: float
     fat: float
