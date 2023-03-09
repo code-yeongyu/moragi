@@ -1,4 +1,4 @@
-name: 아침이다 일해라 모락이
+name: 점심이다 일해라 모락이
 on:
   workflow_dispatch:
 
@@ -31,4 +31,4 @@ jobs:
         run: poetry install
 
       - name: Run Moragi
-        run: poetry run python3 -m moragi send-meal-message ${{ vars.CJ_FRESH_MEAL_STORE_ID }} ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: poetry run python3 -m moragi send-photo-message ${{ vars.CJ_FRESH_MEAL_STORE_ID }} ${{ secrets.SLACK_WEBHOOK_URL }}
