@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Moragi Send Meal Message",
+            "type": "python",
+            "request": "launch",
+            "module": "moragi",
+            "justMyCode": true,
+            "args": [
+                "send-meal-message",
+                "6505",
+                "https://hooks.slack.com/services/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"
+            ]
+        },
+        {
+            "name": "Moragi Send Photo Message",
+            "type": "python",
+            "request": "launch",
+            "module": "moragi",
+            "justMyCode": true,
+            "args": [
+                "send-photo-message",
+                "6505",
+                "https://hooks.slack.com/services/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"
+            ]
+        }
+    ]
+}
