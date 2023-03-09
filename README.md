@@ -2,7 +2,8 @@
 
 모락이는 [CJ 프레시밀](https://front.cjfreshmeal.co.kr/)에서 오늘의 식단 정보를 가져와 슬랙 웹훅을 통해 전송하는 기능을 제공합니다. ✨
 
-본 프로젝트에 설정된 [깃허브 액션](https://github.com/code-yeongyu/moragi/blob/master/.github/workflows/daily_job.yml)의 cron schedule 설정에 따라 평일 한국시간 9시마다 되고있어요. 따라서, 별도의 서버 없이 작동하고 있는 중입니다!
+cron schedule 설정에 따라 평일 한국시간 8시마다, 11시 반마다 되고있어요. 따라서, 별도의 서버 없이 작동하고 있는 중입니다!
+cron 의 경우에는 github action 의 load 가 높으면 작동하지 않는 문제가 있어 외부 서비스인 cron-job.org 에서 트리거 하는 형식으로 구현되어 있어요. 잘 작동하고있는지 상태를 보려면 [이곳](https://54qwszd1.status.cron-job.org/)을 보면 됩니다.
 
 현재는 [무신사](https://musinsa.com)의 구내식당인 '모락모락'의 식단 정보를 가져오고 있습니다. 🍚
 
@@ -28,7 +29,7 @@
 이제는 지금 회사의 식당 정보를 등록해야 하는데요! curl 와 jq 를 이용해서 `CJ_FRESH_MEAL_STORE_ID` 를 알아내야 합니다. 없다면 미리 설치해주시고, 다음의 명령어를 입력해주세요!
 
 ```sh
-curl 'https://front.cjfreshmeal.co.kr/store/v1/search-store?page=1&schKey=%EB%AC%B4%EC%8B%A0%EC%82%AC&isList=false' | jq '.data.storeList[0].idx'
+curl 'https://front.cjfreshmeal.co.kr/store/v1/search-store?page=1&schKey=<회사명>isList=false' | jq '.data.storeList[0].idx'
 ```
 
 그러면 아래 사진과 같이, 결과값이 나옵니다. 이 중 숫자값만 복사해주세요.
