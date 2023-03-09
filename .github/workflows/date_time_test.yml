@@ -2,7 +2,7 @@ name: datetimetest
 on:
   workflow_dispatch:
   schedule:
-    - cron: "5 * * * 1-5"
+    - cron: "0 23 * * 1-5"
 
 jobs:
   moragi:
