@@ -1,12 +1,6 @@
 name: 일해라 모락이
 on:
   workflow_dispatch:
-  schedule:
-    # 실제 스케쥴 작업이 시작될 cron을 등록하면 됩니다.
-    # 크론은 https://crontab.guru/ 여기서 확인하면 좋을 것 같습니다.
-    # 이 크론은 평일 0시 (한국시간 9시)에 실행됩니다.
-    - cron: '0 0 * * 1-5'
-    - cron: '40 0 * * 1-5'
 
 jobs:
   moragi:
