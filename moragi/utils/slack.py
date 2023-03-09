@@ -1,4 +1,5 @@
 import datetime
+import random
 from http import HTTPStatus
 
 import pytz
@@ -82,11 +83,29 @@ def _get_date_string():
 def send_photo_message(url: str, lunch_options: list[Meal]):
 
     def _make_slack_blocks(lunch_options: list[Meal]):
+        greetings_start = [
+            '안녕하세요! 모락이에요 🙇‍♂️'
+            '안녕하세요! 신입사원 모락이에요 🐥 ',
+            '안녕하세요! 모락이입니다 🙋‍♂️',
+        ]
+        greetings_end = [
+            '점심 메뉴가 준비된거같아 살짝 가서 찍어왔어요 📸',
+            '오늘도 몰래가서 슬쩍 📸',
+            '배고프시죠?! 그럴줄 알고 점심 메뉴를 찍어왔답니다 📸',
+        ]
+        closes = [
+            '식사 맛있게 하세요 😋',
+            '저는 이만 가볼게요! 🙋‍♂️',
+            '모락이는 또 돌아오겠습니다! 🙌',
+            '으악 먹고싶다 😋',
+            '저는 로봇일텐데 왜 사진보니까 배가 고플까요 🤔',
+        ]
+
         return [{
             'type': 'section',
             'text': {
                 'type': 'mrkdwn',
-                'text': '안녕하세요! 모락이에요 🙇‍♂️ 점심 메뉴가 준비된거같아 살짝 가서 찍어왔어요 📸'
+                'text': f'{random.choice(greetings_start)} {random.choice(greetings_end)}'
             },
         }, {
             'type': 'divider'
@@ -96,7 +115,7 @@ def send_photo_message(url: str, lunch_options: list[Meal]):
             'type': 'section',
             'text': {
                 'type': 'mrkdwn',
-                'text': '식사 맛있게 하세요 😋'
+                'text': random.choice(closes)
             }
         }]
 
