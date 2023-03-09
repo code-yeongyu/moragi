@@ -84,7 +84,7 @@ def send_photo_message(url: str, lunch_options: list[Meal]):
 
     def _make_slack_blocks(lunch_options: list[Meal]):
         greetings_start = [
-            '안녕하세요! 모락이에요 🙇‍♂️'
+            '안녕하세요! 모락이에요 🙇‍♂️',
             '안녕하세요! 신입사원 모락이에요 🐥 ',
             '안녕하세요! 모락이입니다 🙋‍♂️',
         ]
