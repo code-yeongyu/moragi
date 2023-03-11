@@ -6,7 +6,6 @@ import pytz
 from slack_sdk.webhook import WebhookClient
 from slack_sdk.webhook.webhook_response import WebhookResponse
 
-from moragi.models.cj_fresh_meal_response_model import CJFreshMealMenuModel
 from moragi.models.menu import DailyMenuModel, MenuModel
 from moragi.utils import console
 
@@ -104,9 +103,24 @@ _{option.kcal} 칼로리_
         return blocks
 
 
-def send_photo_message(url: str, lunch_options: list[CJFreshMealMenuModel]):  # todo: refactor this with class
+class LunchWithPhotoSender:
+    '''CJ 프레시밀에 점심 이미지가 약 오전 11시 20분 이후에 업로드 되므로, 해당 시간 이후를 위한 클래스'''
 
-    def _make_slack_blocks(lunch_options: list[CJFreshMealMenuModel]):
+    def __init__(self, url: str, lunch_options: list[MenuModel]):
+        self.url = url
+        self.lunch_options = lunch_options
+
+    def run(self):
+        webhook = WebhookClient(self.url)
+        console.log('Sending message to Slack')
+        response: WebhookResponse = webhook.send(
+            text='모락이에요!',
+            blocks=self._make_slack_blocks(),
+        )
+        console.log('Sent Message to slack with response', _webhook_response_to_dict(response))
+        assert response.status_code == HTTPStatus.OK.value
+
+    def _make_slack_blocks(self):
         greetings_start = [
             '안녕하세요! 모락이에요 🙇‍♂️',
             '안녕하세요! 신입사원 모락이에요 🐥 ',
@@ -127,7 +141,7 @@ def send_photo_message(url: str, lunch_options: list[CJFreshMealMenuModel]):  # 
             '우와 오늘 진짜 맛있어보여요 🍚',
         ]
 
-        return [{
+        blocks = [{
             'type': 'section',
             'text': {
                 'type': 'mrkdwn',
@@ -135,7 +149,7 @@ def send_photo_message(url: str, lunch_options: list[CJFreshMealMenuModel]):  # 
             },
         }, {
             'type': 'divider'
-        }] + _get_options_block(lunch_options) + [{
+        }] + self._get_options_block(self.lunch_options) + [{
             'type': 'divider'
         }, {
             'type': 'section',
@@ -145,10 +159,12 @@ def send_photo_message(url: str, lunch_options: list[CJFreshMealMenuModel]):  # 
             }
         }]
 
-    def _get_options_block(options: list[CJFreshMealMenuModel]) -> list[dict[str, str]]:
+        return blocks
+
+    def _get_options_block(self, options: list[MenuModel]) -> list[dict[str, str]]:
         blocks = []
         for option in options:
-            blocks.append({
+            blocks.extend([{
                 'type': 'section',
                 'text': {
                     'type': 'mrkdwn',
@@ -157,31 +173,23 @@ def send_photo_message(url: str, lunch_options: list[CJFreshMealMenuModel]):  # 
 • {option.name}
 '''[1:]
                 }
-            })
-            blocks.append({'type': 'image', 'image_url': option.thumbnail_url, 'alt_text': option.name})
-            blocks.append({
+            }, {
+                'type': 'image',
+                'image_url': option.thumbnail_url,
+                'alt_text': option.name
+            }, {
                 'type': 'actions',
                 'elements': [{
                     'type': 'button',
                     'text': {
                         'type': 'plain_text',
-                        'text': '자세히 보러가기'
-                    },
-                    'action_id': 'button',
-                    'url': f'https://front.cjfreshmeal.co.kr/menu/detail/{option.meal_index}',
+                        'text': '자세히 보러가기',
+                        'action_id': 'button',
+                        'url': option.detail_info_url
+                    }
                 }]
-            })
+            }])
         return blocks
-
-    webhook = WebhookClient(url)
-    console.log('Sending message to Slack')
-    response: WebhookResponse = webhook.send(
-        text='모락이에요!',
-        blocks=_make_slack_blocks(lunch_options),
-    )
-    console.log('Sent Message to slack with response', _webhook_response_to_dict(response))
-
-    assert response.status_code == HTTPStatus.OK.value
 
 
 def _webhook_response_to_dict(instance: WebhookResponse):
