@@ -115,12 +115,12 @@ class LunchWithPhotoSender:
         console.log('Sending message to Slack')
         response: WebhookResponse = webhook.send(
             text='모락이에요!',
-            blocks=self._make_slack_blocks(),
+            blocks=self._get_slack_blocks(),
         )
         console.log('Sent Message to slack with response', _webhook_response_to_dict(response))
         assert response.status_code == HTTPStatus.OK.value
 
-    def _make_slack_blocks(self):
+    def _get_slack_blocks(self):
         greetings_start = [
             '안녕하세요! 모락이에요 🙇‍♂️',
             '안녕하세요! 신입사원 모락이에요 🐥 ',
