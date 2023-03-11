@@ -39,7 +39,7 @@ class CJFreshMealMenuModel(BaseModel):
         allow_population_by_field_name = True
 
 
-class CJFreshMealResponseModel(BaseModel):
+class CJFreshMealDailyResponseModel(BaseModel):
     status: str
     return_code: str = Field(alias='retCode')
     return_message: str = Field(alias='retMsg')
