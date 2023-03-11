@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
 
-class Meal(BaseModel):
+class CJFreshMealMenuModel(BaseModel):
     meal_index: int = Field(alias='mealIdx')
     mbr_meal_idx: int = Field(alias='mbrMealIdx')
     name: str
@@ -12,7 +12,7 @@ class Meal(BaseModel):
     fat: float
     salt: float
     thumbnail_url: str = Field(alias='thumbnailUrl')
-    corner: str
+    food_type: str = Field(alias='corner')
     rating: int
     logged: bool
     logged_all: bool = Field(alias='loggedAll')
@@ -35,10 +35,13 @@ class Meal(BaseModel):
     su_minute: str = Field(alias='suMinute')
     calories_yn: str = Field(alias='caloriesYn')
 
+    class Config:
+        allow_population_by_field_name = True
 
-class CJFreshMealResponse(BaseModel):
+
+class CJFreshMealResponseModel(BaseModel):
     status: str
     return_code: str = Field(alias='retCode')
     return_message: str = Field(alias='retMsg')
     date: str
-    meals: dict[str, list[Meal]] = Field(alias='data')
+    menu: dict[str, list[CJFreshMealMenuModel]] = Field(alias='data')

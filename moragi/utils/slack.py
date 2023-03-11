@@ -6,13 +6,17 @@ import pytz
 from slack_sdk.webhook import WebhookClient
 from slack_sdk.webhook.webhook_response import WebhookResponse
 
-from moragi.models.cj_fresh_meal_response_model import Meal
+from moragi.models.cj_fresh_meal_response_model import CJFreshMealMenuModel
 from moragi.utils import console
 
 
-def send_meal_message(url: str, breakfast_options: list[Meal], lunch_options: list[Meal]):
+def send_meal_message(
+    url: str,
+    breakfast_options: list[CJFreshMealMenuModel],
+    lunch_options: list[CJFreshMealMenuModel],
+):
 
-    def _make_slack_blocks(breakfast_options: list[Meal], lunch_options: list[Meal]):
+    def _make_slack_blocks(breakfast_options: list[CJFreshMealMenuModel], lunch_options: list[CJFreshMealMenuModel]):
         return [{
             'type': 'section',
             'text': {
@@ -45,7 +49,7 @@ def send_meal_message(url: str, breakfast_options: list[Meal], lunch_options: li
             }
         }]
 
-    def _get_options_block(options: list[Meal]) -> list[dict[str, str]]:
+    def _get_options_block(options: list[CJFreshMealMenuModel]) -> list[dict[str, str]]:
         blocks = []
         for option in options:
             blocks.append({
@@ -53,7 +57,7 @@ def send_meal_message(url: str, breakfast_options: list[Meal], lunch_options: li
                 'text': {
                     'type': 'mrkdwn',
                     'text': f'''
-*{option.corner}*
+*{option.food_type}*
 • {option.name}
 • {option.side}
 _{option.kcal} 칼로리_
@@ -80,9 +84,9 @@ def _get_date_string():
     return f'{month}월 {day}일'
 
 
-def send_photo_message(url: str, lunch_options: list[Meal]):
+def send_photo_message(url: str, lunch_options: list[CJFreshMealMenuModel]):
 
-    def _make_slack_blocks(lunch_options: list[Meal]):
+    def _make_slack_blocks(lunch_options: list[CJFreshMealMenuModel]):
         greetings_start = [
             '안녕하세요! 모락이에요 🙇‍♂️',
             '안녕하세요! 신입사원 모락이에요 🐥 ',
@@ -121,7 +125,7 @@ def send_photo_message(url: str, lunch_options: list[Meal]):
             }
         }]
 
-    def _get_options_block(options: list[Meal]) -> list[dict[str, str]]:
+    def _get_options_block(options: list[CJFreshMealMenuModel]) -> list[dict[str, str]]:
         blocks = []
         for option in options:
             blocks.append({
@@ -129,7 +133,7 @@ def send_photo_message(url: str, lunch_options: list[Meal]):
                 'text': {
                     'type': 'mrkdwn',
                     'text': f'''
-*{option.corner}*
+*{option.food_type}*
 • {option.name}
 '''[1:]
                 }
