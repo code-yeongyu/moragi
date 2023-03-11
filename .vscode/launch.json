@@ -5,28 +5,23 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Moragi Send Meal Message",
+            "name": "모락이",
             "type": "python",
             "request": "launch",
             "module": "moragi",
             "justMyCode": true,
             "args": [
-                "send-meal-message",
+                "${input:command}",
                 "6505",
                 "https://hooks.slack.com/services/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"
             ]
-        },
+        }
+    ],
+    "inputs": [
         {
-            "name": "Moragi Send Photo Message",
-            "type": "python",
-            "request": "launch",
-            "module": "moragi",
-            "justMyCode": true,
-            "args": [
-                "send-photo-message",
-                "6505",
-                "https://hooks.slack.com/services/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"
-            ]
+            "id": "command",
+            "type": "promptString",
+            "description": "실행 할 명령 타입. `moragi/cli/commands.py` 에 존재하는 명령어 이름을 입력해주세요."
         }
     ]
 }
