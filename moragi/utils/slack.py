@@ -6,46 +6,86 @@ import pytz
 from slack_sdk.webhook import WebhookClient
 from slack_sdk.webhook.webhook_response import WebhookResponse
 
-from moragi.models.cj_fresh_meal_response_model import Meal
+from moragi.models.menu import DailyMenuModel, MenuModel
 from moragi.utils import console
 
 
-def send_meal_message(url: str, breakfast_options: list[Meal], lunch_options: list[Meal]):
+class MealSummarySender:
 
-    def _make_slack_blocks(breakfast_options: list[Meal], lunch_options: list[Meal]):
-        return [{
+    def __init__(self, url: str, daily_menu: DailyMenuModel):
+        self.url = url
+        self.daily_menu = daily_menu
+
+    def run(self):
+        webhook = WebhookClient(self.url)
+        console.log('Sending message to Slack')
+        response: WebhookResponse = webhook.send(
+            text='모락이에요!',
+            blocks=self._get_slack_blocks(),
+        )
+        console.log('Sent Message to slack with response', _webhook_response_to_dict(response))
+        assert response.status_code == HTTPStatus.OK.value
+
+    def _get_slack_blocks(self):
+        blocks = [{
             'type': 'section',
             'text': {
                 'type': 'mrkdwn',
-                'text': f'안녕하세요! 모락이에요. 🙇‍♂️ 오늘은 {_get_date_string()}이에요!'
+                'text': f'안녕하세요! 모락이에요. 🙇‍♂️ 오늘은 {self._get_date_string()}이에요!'
             },
         }, {
             'type': 'divider'
-        }, {
-            'type': 'section',
-            'text': {
-                'type': 'mrkdwn',
-                'text': '먼저 아침 메뉴부터 알려드릴게요! 🥪'
-            },
-        }] + _get_options_block(breakfast_options) + [{
-            'type': 'divider'
-        }, {
-            'type': 'section',
-            'text': {
-                'type': 'mrkdwn',
-                'text': '그리고 점심 메뉴를 알려드릴게요! 🍚'
-            },
-        }] + _get_options_block(lunch_options) + [{
-            'type': 'divider'
-        }, {
+        }]
+
+        if self.daily_menu.breakfast:
+            blocks.extend([{
+                'type': 'section',
+                'text': {
+                    'type': 'mrkdwn',
+                    'text': '먼저 아침 메뉴부터 알려드릴게요! 🥪'
+                },
+            }] + self._get_options_block(self.daily_menu.breakfast) + [{
+                'type': 'divider'
+            }])
+
+        if self.daily_menu.lunch:
+            blocks.extend([{
+                'type': 'section',
+                'text': {
+                    'type': 'mrkdwn',
+                    'text': '그리고 점심 메뉴를 알려드릴게요! 🍚'
+                },
+            }] + self._get_options_block(self.daily_menu.lunch) + [{
+                'type': 'divider'
+            }])
+
+        if self.daily_menu.dinner:
+            blocks.extend([{
+                'type': 'section',
+                'text': {
+                    'type': 'mrkdwn',
+                    'text': '저녁 메뉴는 다음과 같아요! 🍽️'
+                }
+            }] + self._get_options_block(self.daily_menu.lunch) + [{
+                'type': 'divider'
+            }])
+
+        blocks.append({
             'type': 'section',
             'text': {
                 'type': 'mrkdwn',
                 'text': '오늘 하루도 행복한 하루 되세요! 🥰 모락이는 또 돌아오겠습니다! 🙌'
             }
-        }]
+        })
+        return blocks
 
-    def _get_options_block(options: list[Meal]) -> list[dict[str, str]]:
+    def _get_date_string(self):
+        date = datetime.datetime.utcnow().astimezone(pytz.timezone('Asia/Seoul'))
+        month: int = date.month
+        day: int = date.day
+        return f'{month}월 {day}일'
+
+    def _get_options_block(self, options: list[MenuModel]) -> list[dict[str, str]]:
         blocks = []
         for option in options:
             blocks.append({
@@ -53,7 +93,7 @@ def send_meal_message(url: str, breakfast_options: list[Meal], lunch_options: li
                 'text': {
                     'type': 'mrkdwn',
                     'text': f'''
-*{option.corner}*
+*{option.food_type}*
 • {option.name}
 • {option.side}
 _{option.kcal} 칼로리_
@@ -62,27 +102,25 @@ _{option.kcal} 칼로리_
             })
         return blocks
 
-    webhook = WebhookClient(url)
-    console.log('Sending message to Slack')
-    response: WebhookResponse = webhook.send(
-        text='모락이에요!',
-        blocks=_make_slack_blocks(breakfast_options, lunch_options),
-    )
-    console.log('Sent Message to slack with response', _webhook_response_to_dict(response))
 
-    assert response.status_code == HTTPStatus.OK.value
+class LunchWithPhotoSender:
+    '''CJ 프레시밀에 점심 이미지가 약 오전 11시 20분 이후에 업로드 되므로, 해당 시간 이후를 위한 클래스'''
 
+    def __init__(self, url: str, lunch_options: list[MenuModel]):
+        self.url = url
+        self.lunch_options = lunch_options
 
-def _get_date_string():
-    date = datetime.datetime.utcnow().astimezone(pytz.timezone('Asia/Seoul'))
-    month: int = date.month
-    day: int = date.day
-    return f'{month}월 {day}일'
+    def run(self):
+        webhook = WebhookClient(self.url)
+        console.log('Sending message to Slack')
+        response: WebhookResponse = webhook.send(
+            text='모락이에요!',
+            blocks=self._make_slack_blocks(),
+        )
+        console.log('Sent Message to slack with response', _webhook_response_to_dict(response))
+        assert response.status_code == HTTPStatus.OK.value
 
-
-def send_photo_message(url: str, lunch_options: list[Meal]):
-
-    def _make_slack_blocks(lunch_options: list[Meal]):
+    def _make_slack_blocks(self):
         greetings_start = [
             '안녕하세요! 모락이에요 🙇‍♂️',
             '안녕하세요! 신입사원 모락이에요 🐥 ',
@@ -103,7 +141,7 @@ def send_photo_message(url: str, lunch_options: list[Meal]):
             '우와 오늘 진짜 맛있어보여요 🍚',
         ]
 
-        return [{
+        blocks = [{
             'type': 'section',
             'text': {
                 'type': 'mrkdwn',
@@ -111,7 +149,7 @@ def send_photo_message(url: str, lunch_options: list[Meal]):
             },
         }, {
             'type': 'divider'
-        }] + _get_options_block(lunch_options) + [{
+        }] + self._get_options_block(self.lunch_options) + [{
             'type': 'divider'
         }, {
             'type': 'section',
@@ -121,43 +159,37 @@ def send_photo_message(url: str, lunch_options: list[Meal]):
             }
         }]
 
-    def _get_options_block(options: list[Meal]) -> list[dict[str, str]]:
+        return blocks
+
+    def _get_options_block(self, options: list[MenuModel]) -> list[dict[str, str]]:
         blocks = []
         for option in options:
-            blocks.append({
+            blocks.extend([{
                 'type': 'section',
                 'text': {
                     'type': 'mrkdwn',
                     'text': f'''
-*{option.corner}*
+*{option.food_type}*
 • {option.name}
 '''[1:]
                 }
-            })
-            blocks.append({'type': 'image', 'image_url': option.thumbnail_url, 'alt_text': option.name})
-            blocks.append({
+            }, {
+                'type': 'image',
+                'image_url': option.thumbnail_url,
+                'alt_text': option.name
+            }, {
                 'type': 'actions',
                 'elements': [{
                     'type': 'button',
                     'text': {
                         'type': 'plain_text',
-                        'text': '자세히 보러가기'
-                    },
-                    'action_id': 'button',
-                    'url': f'https://front.cjfreshmeal.co.kr/menu/detail/{option.meal_index}',
+                        'text': '자세히 보러가기',
+                        'action_id': 'button',
+                        'url': option.detail_info_url
+                    }
                 }]
-            })
+            }])
         return blocks
-
-    webhook = WebhookClient(url)
-    console.log('Sending message to Slack')
-    response: WebhookResponse = webhook.send(
-        text='모락이에요!',
-        blocks=_make_slack_blocks(lunch_options),
-    )
-    console.log('Sent Message to slack with response', _webhook_response_to_dict(response))
-
-    assert response.status_code == HTTPStatus.OK.value
 
 
 def _webhook_response_to_dict(instance: WebhookResponse):
