@@ -2,6 +2,9 @@ from http import HTTPStatus
 
 from slack_sdk.webhook import WebhookClient
 from slack_sdk.webhook.webhook_response import WebhookResponse
+from tenacity import retry
+from tenacity.stop import stop_after_attempt
+from tenacity.wait import wait_fixed
 
 from moragi.utils import console
 from moragi.utils.slack.slack_message_builder import SlackMessageBuilder
@@ -13,6 +16,7 @@ class SlackMessageSender:
         self.url = url
         self.message_builder = message_builder
 
+    @retry(reraise=True, stop=stop_after_attempt(10), wait=wait_fixed(10))
     def run(self):
         webhook = WebhookClient(self.url)
         blocks = self.message_builder.make_slack_blocks()
