@@ -1,7 +1,9 @@
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 
-class CJFreshMealMenuModel(BaseModel):
+class Meal(BaseModel):
     meal_index: int = Field(alias='mealIdx')
     mbr_meal_idx: int = Field(alias='mbrMealIdx')
     name: str
@@ -39,9 +41,22 @@ class CJFreshMealMenuModel(BaseModel):
         allow_population_by_field_name = True
 
 
-class CJFreshMealDailyResponseModel(BaseModel):
+class DayMeal(BaseModel):
+    breakfast: Optional[list[Meal]] = Field(alias='1')
+    lunch: Optional[list[Meal]] = Field(alias='2')
+    dinner: Optional[list[Meal]] = Field(alias='3')
+
+    class Config:
+        allow_population_by_field_name = True
+
+
+class TodayAllMealResponse(BaseModel):
+    '''The response of `today-all-meal` API'''
     status: str
     return_code: str = Field(alias='retCode')
     return_message: str = Field(alias='retMsg')
-    date: str
-    menu: dict[str, list[CJFreshMealMenuModel]] = Field(alias='data')
+    date: str  # in format of: 20230307
+    meal: DayMeal = Field(alias='data')
+
+    class Config:
+        allow_population_by_field_name = True

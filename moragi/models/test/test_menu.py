@@ -1,7 +1,7 @@
 import pytest
 
-from moragi.models.cj_fresh_meal_response_model import CJFreshMealMenuModel
-from moragi.models.menu import MenuModel
+from moragi.models.cj_fresh_meal_response_model import Meal
+from moragi.models.menu import Menu
 
 
 @pytest.fixture
@@ -40,11 +40,11 @@ def cj_fresh_meal_menu_model():
         'suMinute': '30',
         'caloriesYn': 'Y'
     }
-    return CJFreshMealMenuModel.parse_obj(cj_fresh_meal_response)
+    return Meal.parse_obj(cj_fresh_meal_response)
 
 
-def test_menu_model_from_cj_fresh_meal_menu_model(cj_fresh_meal_menu_model: CJFreshMealMenuModel):
-    menu_model = MenuModel.from_cj_fresh_meal_menu_model(cj_fresh_meal_menu_model)
+def test_menu_model_from_cj_fresh_meal_menu_model(cj_fresh_meal_menu_model: Meal):
+    menu_model = Menu.from_cj_meal(cj_fresh_meal_menu_model)
 
     assert menu_model.detail_info_url == \
         f'https://front.cjfreshmeal.co.kr/menu/detail/{cj_fresh_meal_menu_model.meal_index}'
