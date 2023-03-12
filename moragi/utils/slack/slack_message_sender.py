@@ -15,10 +15,11 @@ class SlackMessageSender:
 
     def run(self):
         webhook = WebhookClient(self.url)
-        console.log('Sending message to Slack')
+        blocks = self.message_builder.make_slack_blocks()
+        console.log('Sending message to Slack with blocks', blocks)
         response: WebhookResponse = webhook.send(
             text='모락이에요!',
-            blocks=self.message_builder.make_slack_blocks(),
+            blocks=blocks,
         )
         console.log('Sent Message to slack with response', self._webhook_response_to_dict(response))
         assert response.status_code == HTTPStatus.OK.value
