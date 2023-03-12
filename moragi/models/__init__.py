@@ -1,0 +1,1 @@
+from .weekday import Weekday
