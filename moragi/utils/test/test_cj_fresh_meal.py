@@ -24,12 +24,10 @@ class TestGetTodayMeal:
         mock_response_text = '''
         {
             "status": "success",
-            "retCode": "0",
+            "retCode": "00",
             "retMsg": "",
-            "data": {
-                "meal_type": []
-            },
-            "date": "2022-03-14"
+            "data": {},
+            "date": "Sun Mar 12 03:45:51 KST 2023",
         }
         '''
         mock_get.return_value.text = mock_response_text
