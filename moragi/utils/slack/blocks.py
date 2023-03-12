@@ -1,6 +1,6 @@
 from typing import Any
 
-from moragi.models.menu import DailyMenu, Menu, WeeklyMenu
+from moragi.models.menu import DailyMenu, Menu
 
 SLACK_BLOCK_TYPE = list[dict[str, Any]]
 
@@ -101,95 +101,5 @@ def daily_menu_list_block(daily_menu: DailyMenu) -> SLACK_BLOCK_TYPE:
         }] + simple_menu_list_block(daily_menu.lunch) + [{
             'type': 'divider'
         }]
-
-    return blocks
-
-
-def weekly_menu_list_block(menu_list: WeeklyMenu) -> SLACK_BLOCK_TYPE:
-    blocks = []
-
-    if menu_list.monday:
-        blocks += [
-            {
-                'type': 'section',
-                'text': {
-                    'type': 'mrkdwn',
-                    'text': '월요일 메뉴는 다음과 같아요! 🍽️'
-                }
-            },
-            *daily_menu_list_block(menu_list.monday),
-        ]
-
-    if menu_list.tuesday:
-        blocks += [
-            {
-                'type': 'section',
-                'text': {
-                    'type': 'mrkdwn',
-                    'text': '화요일 메뉴는 다음과 같아요! 🍽️'
-                }
-            },
-            *daily_menu_list_block(menu_list.tuesday),
-        ]
-
-    if menu_list.wednesday:
-        blocks += [
-            {
-                'type': 'section',
-                'text': {
-                    'type': 'mrkdwn',
-                    'text': '수요일 메뉴는 다음과 같아요! 🍽️'
-                }
-            },
-            *daily_menu_list_block(menu_list.wednesday),
-        ]
-
-    if menu_list.thursday:
-        blocks += [
-            {
-                'type': 'section',
-                'text': {
-                    'type': 'mrkdwn',
-                    'text': '목요일 메뉴는 다음과 같아요! 🍽️'
-                }
-            },
-            *daily_menu_list_block(menu_list.thursday),
-        ]
-
-    if menu_list.friday:
-        blocks += [
-            {
-                'type': 'section',
-                'text': {
-                    'type': 'mrkdwn',
-                    'text': '금요일 메뉴는 다음과 같아요! 🍽️'
-                }
-            },
-            *daily_menu_list_block(menu_list.friday),
-        ]
-
-    if menu_list.saturday:
-        blocks += [
-            {
-                'type': 'section',
-                'text': {
-                    'type': 'mrkdwn',
-                    'text': '토요일 메뉴는 다음과 같아요! 🍽️'
-                }
-            },
-            *daily_menu_list_block(menu_list.saturday),
-        ]
-
-    if menu_list.sunday:
-        blocks += [
-            {
-                'type': 'section',
-                'text': {
-                    'type': 'mrkdwn',
-                    'text': '일요일 메뉴는 다음과 같아요! 🍽️'
-                }
-            },
-            *daily_menu_list_block(menu_list.sunday),
-        ]
 
     return blocks
