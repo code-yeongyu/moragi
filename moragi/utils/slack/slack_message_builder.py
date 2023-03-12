@@ -5,8 +5,12 @@ from typing import Any
 
 import pytz
 
-from moragi.models.menu import DailyMenu, Menu
-from moragi.utils.slack.blocks import image_menu_list_block, simple_menu_list_block
+from moragi.models.menu import DailyMenu, Menu, WeeklyMenu
+from moragi.utils.slack.blocks import (
+    daily_menu_list_block,
+    image_menu_list_block,
+    weekly_menu_list_block,
+)
 
 
 class SlackMessageBuilder(ABC):
@@ -22,7 +26,7 @@ class MenuSummaryMessageBuilder(SlackMessageBuilder):
         self.daily_menu = daily_menu
 
     def make_slack_blocks(self):
-        blocks = [{
+        return [{
             'type': 'section',
             'text': {
                 'type': 'mrkdwn',
@@ -30,49 +34,13 @@ class MenuSummaryMessageBuilder(SlackMessageBuilder):
             },
         }, {
             'type': 'divider'
-        }]
-
-        if self.daily_menu.breakfast:
-            blocks.extend([{
-                'type': 'section',
-                'text': {
-                    'type': 'mrkdwn',
-                    'text': '먼저 아침 메뉴부터 알려드릴게요! 🥪'
-                },
-            }] + simple_menu_list_block(self.daily_menu.breakfast) + [{
-                'type': 'divider'
-            }])
-
-        if self.daily_menu.lunch:
-            blocks.extend([{
-                'type': 'section',
-                'text': {
-                    'type': 'mrkdwn',
-                    'text': '그리고 점심 메뉴를 알려드릴게요! 🍚'
-                },
-            }] + simple_menu_list_block(self.daily_menu.lunch) + [{
-                'type': 'divider'
-            }])
-
-        if self.daily_menu.dinner:
-            blocks.extend([{
-                'type': 'section',
-                'text': {
-                    'type': 'mrkdwn',
-                    'text': '저녁 메뉴는 다음과 같아요! 🍽️'
-                }
-            }] + simple_menu_list_block(self.daily_menu.lunch) + [{
-                'type': 'divider'
-            }])
-
-        blocks.append({
+        }, *daily_menu_list_block(self.daily_menu), {
             'type': 'section',
             'text': {
                 'type': 'mrkdwn',
                 'text': '오늘 하루도 행복한 하루 되세요! 🥰 모락이는 또 돌아오겠습니다! 🙌'
             }
-        })
-        return blocks
+        }]
 
     def _get_date_string(self):
         date = datetime.datetime.utcnow().astimezone(pytz.timezone('Asia/Seoul'))
@@ -84,8 +52,8 @@ class MenuSummaryMessageBuilder(SlackMessageBuilder):
 class LunchWithPhotoMessageBuilder(SlackMessageBuilder):
     '''CJ 프레시밀에 점심 이미지가 약 오전 11시 20분 이후에 업로드 되므로, 해당 시간 이후를 위한 클래스'''
 
-    def __init__(self, lunch_options: list[Menu]):
-        self.lunch_options = lunch_options
+    def __init__(self, lunch_menu_list: list[Menu]):
+        self.lunch_menu_list = lunch_menu_list
 
     def make_slack_blocks(self):
         greetings_start = [
@@ -108,7 +76,7 @@ class LunchWithPhotoMessageBuilder(SlackMessageBuilder):
             '우와 오늘 진짜 맛있어보여요 🍚',
         ]
 
-        blocks = [{
+        return [{
             'type': 'section',
             'text': {
                 'type': 'mrkdwn',
@@ -116,7 +84,7 @@ class LunchWithPhotoMessageBuilder(SlackMessageBuilder):
             },
         }, {
             'type': 'divider'
-        }] + image_menu_list_block(self.lunch_options) + [{
+        }, *image_menu_list_block(self.lunch_menu_list), {
             'type': 'divider'
         }, {
             'type': 'section',
