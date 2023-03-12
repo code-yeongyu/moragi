@@ -94,4 +94,45 @@ class LunchWithPhotoMessageBuilder(SlackMessageBuilder):
             }
         }]
 
-        return blocks
+
+class TommorowMenuMessageBuilder(SlackMessageBuilder):
+
+    def __init__(self, tommorow_menu: DailyMenu):
+        self.daily_menu = tommorow_menu
+
+    def make_slack_blocks(self):
+        greetings_start = [
+            '안녕하세요! 모락이에요 🙇‍♂️',
+            '안녕하세요! 신입사원 모락이에요 🐥 ',
+            '안녕하세요! 모락이입니다 🙋‍♂️',
+            '모락이에요! 🙋‍♂️',
+            '모락이가 왔습니다! 🙋‍♂️',
+        ]
+        greetings_end = [
+            '내일의 메뉴를 알려드릴게요! 🍙',
+            '내일의 메뉴를 들고 왔어요! 🍚',
+            '내일 나오는 메뉴가 궁금해서 그새 또 다녀왔어요! 🍽️',
+        ]
+        closings = [
+            '오늘 하루도 행복한 하루 되세요! 🥰',
+            '저는 이만 가볼게요! 🙋‍♂️',
+            '모락이는 또 돌아오겠습니다! 🙌',
+            '업무에 참고 하시길 바랍니다 📁',
+            '오늘 하루도 수고 많으셨습니다! 🙇‍♂️',
+        ]
+        return [{
+            'type': 'section',
+            'text': {
+                'type': 'mrkdwn',
+                'text': f'{random.choice(greetings_start)} {random.choice(greetings_end)}'
+            },
+        }, {
+            'type': 'divider'
+        }, *daily_menu_list_block(self.daily_menu), {
+            'type': 'section',
+            'text': {
+                'type': 'mrkdwn',
+                'text': random.choice(closings)
+            },
+        }]
+
