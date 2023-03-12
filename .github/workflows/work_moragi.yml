@@ -10,6 +10,9 @@ on:
           - send-daily-meal-summary
           - send-daily-meal-summary-with-photo
           - send-next-meal-summary
+      target_slack_webhook_url:
+        description: "메시지를 보낼 슬랙 웹훅 URL. 없을 경우 secret 에 설정된 프로젝트 기본 값으로 보내집니다."
+        required: false
         type: string
 
 jobs:
@@ -40,5 +43,10 @@ jobs:
         if: steps.cache-dependencies.cache-hit != 'true'
         run: poetry install
 
-      - name: Run Moragi
+      - name: Run Moragi with default Slack Webhook URL
+        if: github.event.inputs.target_slack_webhook_url == ''
+        run: poetry run python3 -m moragi ${{ github.event.inputs.command }} ${{ vars.CJ_FRESH_MEAL_STORE_ID }} ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Run Moragi with specified Slack Webhook URL
+        if: github.event.inputs.target_slack_webhook_url != ''
         run: poetry run python3 -m moragi ${{ github.event.inputs.command }} ${{ vars.CJ_FRESH_MEAL_STORE_ID }} ${{ secrets.SLACK_WEBHOOK_URL }}
