@@ -6,13 +6,13 @@ import pytz
 from slack_sdk.webhook import WebhookClient
 from slack_sdk.webhook.webhook_response import WebhookResponse
 
-from moragi.models.menu import DailyMenuModel, MenuModel
+from moragi.models.menu import DailyMenu, Menu
 from moragi.utils import console
 
 
 class MealSummarySender:
 
-    def __init__(self, url: str, daily_menu: DailyMenuModel):
+    def __init__(self, url: str, daily_menu: DailyMenu):
         self.url = url
         self.daily_menu = daily_menu
 
@@ -85,7 +85,7 @@ class MealSummarySender:
         day: int = date.day
         return f'{month}월 {day}일'
 
-    def _get_options_block(self, options: list[MenuModel]) -> list[dict[str, str]]:
+    def _get_options_block(self, options: list[Menu]) -> list[dict[str, str]]:
         blocks = []
         for option in options:
             blocks.append({
@@ -106,7 +106,7 @@ _{option.kcal} 칼로리_
 class LunchWithPhotoSender:
     '''CJ 프레시밀에 점심 이미지가 약 오전 11시 20분 이후에 업로드 되므로, 해당 시간 이후를 위한 클래스'''
 
-    def __init__(self, url: str, lunch_options: list[MenuModel]):
+    def __init__(self, url: str, lunch_options: list[Menu]):
         self.url = url
         self.lunch_options = lunch_options
 
@@ -161,7 +161,7 @@ class LunchWithPhotoSender:
 
         return blocks
 
-    def _get_options_block(self, options: list[MenuModel]) -> list[dict[str, str]]:
+    def _get_options_block(self, options: list[Menu]) -> list[dict[str, str]]:
         blocks = []
         for option in options:
             blocks.extend([{
