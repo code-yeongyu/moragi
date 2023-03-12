@@ -5,6 +5,11 @@ on:
       command:
         description: "실행 할 명령 타입. `moragi/cli/commands.py` 에 존재하는 명령어 이름을 입력해주세요."
         required: true
+        type: choice
+        options:
+          - send-daily-meal-summary
+          - send-daily-meal-summary-with-photo
+          - send-next-meal-summary
         type: string
 
 jobs:
