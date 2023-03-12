@@ -2,6 +2,7 @@ from unittest import mock
 from unittest.mock import MagicMock, patch
 
 import pytest
+from tenacity import wait_none
 
 from moragi.models.cj_fresh_meal.week_type import WeekType
 from moragi.models.menu import Menu
@@ -32,12 +33,11 @@ class TestGetTodayMeal:
         }
         '''
         mock_get.return_value.text = sample_response_text
+        cj_fresh_meal_client.get_today_meal.retry.wait = wait_none()  # type: ignore
 
-        # when
-        today_menu = cj_fresh_meal_client.get_today_meal()
-
-        # then
-        assert today_menu is None
+        # when & then
+        with pytest.raises(ValueError):
+            cj_fresh_meal_client.get_today_meal()
 
     @mock.patch('httpx.Client.get')
     @pytest.mark.parametrize('meal_type', ['1', '2', '3'])
@@ -820,12 +820,11 @@ class TestGetWeekMeal:
         }
         '''
         mocked_get.return_value.text = sample_response_text
+        cj_fresh_meal_client.get_week_meal.retry.wait = wait_none()  # type: ignore
 
-        # when
-        weekly_menu = cj_fresh_meal_client.get_week_meal(week_type)
-
-        # then
-        assert weekly_menu is None
+        # when & then
+        with pytest.raises(ValueError):
+            cj_fresh_meal_client.get_week_meal(week_type)
 
     @patch('httpx.Client.get')
     @pytest.mark.parametrize('week_type', [WeekType.THIS_WEEK, WeekType.NEXT_WEEK])
@@ -846,9 +845,8 @@ class TestGetWeekMeal:
         }
         '''
         mocked_get.return_value.text = sample_response_text
+        cj_fresh_meal_client.get_week_meal.retry.wait = wait_none()  # type: ignore
 
-        # when
-        weekly_menu = cj_fresh_meal_client.get_week_meal(week_type)
-
-        # then
-        assert weekly_menu is None
+        # when & then
+        with pytest.raises(ValueError):
+            cj_fresh_meal_client.get_week_meal(week_type)

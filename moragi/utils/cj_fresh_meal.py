@@ -4,6 +4,9 @@ import typing
 from typing import Final, Optional
 
 import httpx
+from tenacity import retry
+from tenacity.stop import stop_after_attempt
+from tenacity.wait import wait_fixed
 
 from moragi.models.cj_fresh_meal.response_model import Meal, TodayAllMealResponse, WeekMealResponse
 from moragi.models.cj_fresh_meal.week_type import WeekType
@@ -18,7 +21,8 @@ class CJFreshMealClient:
         self.store_id = store_id
         self.client = httpx.Client()
 
-    def get_today_meal(self) -> Optional[DailyMenu]:
+    @retry(reraise=True, stop=stop_after_attempt(10), wait=wait_fixed(10))
+    def get_today_meal(self) -> DailyMenu:
         URL = f'{self.BASE_URL}/today-all-meal?storeIdx={self.store_id}'
         console.log(f'Retreving URL: {URL}')
 
@@ -27,10 +31,7 @@ class CJFreshMealClient:
 
         response: Final[TodayAllMealResponse] = TodayAllMealResponse.parse_raw(raw_response.text)
 
-        try:
-            return DailyMenu.from_cj_day_meal(response.meal)
-        except ValueError:  # if is no meal
-            return None
+        return DailyMenu.from_cj_day_meal(response.meal)
 
     def _parse_date(self, date: str) -> datetime.datetime:
         return datetime.datetime.strptime(date, '%Y%m%d')
@@ -40,7 +41,8 @@ class CJFreshMealClient:
             return typing.cast(list[Menu], [])
         return [Menu.from_cj_meal(model) for model in cj_fresh_meal_menu_models]
 
-    def get_week_meal(self, week_type: WeekType) -> Optional[WeeklyMenu]:  # type: ignore
+    @retry(reraise=True, stop=stop_after_attempt(10), wait=wait_fixed(10))
+    def get_week_meal(self, week_type: WeekType) -> WeeklyMenu:  # type: ignore
         URL = f'{self.BASE_URL}/week-meal?storeIdx={self.store_id}&weekType={week_type.value}'
         console.log(f'Retreving URL: {URL}')
 
@@ -49,7 +51,4 @@ class CJFreshMealClient:
 
         response = WeekMealResponse.parse_raw(raw_response.text)
 
-        try:
-            return WeeklyMenu.from_cj_week_meal(response.meal)
-        except ValueError:  # if is no meal
-            return None
+        return WeeklyMenu.from_cj_week_meal(response.meal)
