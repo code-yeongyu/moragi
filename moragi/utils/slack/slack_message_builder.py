@@ -15,7 +15,7 @@ class SlackMessageBuilder(ABC):
         pass
 
 
-class MealSummaryMessageBuilder(SlackMessageBuilder):
+class MenuSummaryMessageBuilder(SlackMessageBuilder):
 
     def __init__(self, daily_menu: DailyMenu):
         self.daily_menu = daily_menu
@@ -173,3 +173,5 @@ class LunchWithPhotoMessageBuilder(SlackMessageBuilder):
                 }]
             }])
         return blocks
+
+class Afternoon

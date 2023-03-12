@@ -1,4 +1,3 @@
-import sys
 from time import sleep
 
 from moragi.utils import console
@@ -9,7 +8,7 @@ def get_today_meal(cj_fresh_meal_store_id: int):
     cj_fresh_meal_client = CJFreshMealClient(cj_fresh_meal_store_id)
     daily_menu = cj_fresh_meal_client.get_today_meal()
     if daily_menu is None:
-        sys.exit('No meal found for today!')
+        raise Exception('No meal found for today!')
     return daily_menu
 
 
