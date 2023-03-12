@@ -1,6 +1,6 @@
 import pytest
 
-from moragi.models.cj_fresh_meal_response_model import Meal
+from moragi.models.cj_fresh_meal.response_model import Meal
 from moragi.models.menu import Menu
 
 
