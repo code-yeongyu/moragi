@@ -1,9 +1,10 @@
 import json
 
-from moragi.models.cj_fresh_meal_response_model import DayMeal
+from moragi.models.cj_fresh_meal.response_model import DayMeal
 
 
 def test_parse_day_menu_model():
+    ''''1' 이나 '2' 같은 키값도 제대로 파싱하는지 테스트'''
     # given
     day_menu_response = json.dumps({
         '1': [{

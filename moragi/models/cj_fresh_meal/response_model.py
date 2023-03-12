@@ -50,6 +50,19 @@ class DayMeal(BaseModel):
         allow_population_by_field_name = True
 
 
+class WeekMeal(BaseModel):
+    monday: Optional[DayMeal] = Field(alias='mo')
+    tuesday: Optional[DayMeal] = Field(alias='tu')
+    wednesday: Optional[DayMeal] = Field(alias='we')
+    thursday: Optional[DayMeal] = Field(alias='th')
+    friday: Optional[DayMeal] = Field(alias='fr')
+    saturday: Optional[DayMeal] = Field(alias='sa')
+    sunday: Optional[DayMeal] = Field(alias='su')
+
+    class Config:
+        allow_population_by_field_name = True
+
+
 class TodayAllMealResponse(BaseModel):
     '''The response of `today-all-meal` API'''
     status: str
@@ -57,6 +70,18 @@ class TodayAllMealResponse(BaseModel):
     return_message: str = Field(alias='retMsg')
     date: str  # in format of: 20230307
     meal: DayMeal = Field(alias='data')
+
+    class Config:
+        allow_population_by_field_name = True
+
+
+class WeekMealResponse(BaseModel):
+    '''The response of `week-meal` API'''
+    status: str
+    return_code: str = Field(alias='retCode')
+    return_message: str = Field(alias='retMsg')
+    date: str
+    meal: WeekMeal = Field(alias='data')
 
     class Config:
         allow_population_by_field_name = True
