@@ -43,7 +43,7 @@ def cj_fresh_meal_menu_model():
     return Meal.parse_obj(cj_fresh_meal_response)
 
 
-def test_menu_model_from_cj_fresh_meal_menu_model(cj_fresh_meal_menu_model: Meal):
+def test_menu_model_from_cj_meal(cj_fresh_meal_menu_model: Meal):
     menu_model = Menu.from_cj_meal(cj_fresh_meal_menu_model)
 
     assert menu_model.detail_info_url == \
