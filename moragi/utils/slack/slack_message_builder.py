@@ -6,6 +6,7 @@ from typing import Any
 import pytz
 
 from moragi.models.menu import DailyMenu, Menu
+from moragi.models.weekday import Weekday
 from moragi.utils.slack.blocks import (
     daily_menu_list_block,
     image_menu_list_block,
@@ -108,9 +109,9 @@ class TommorowMenuMessageBuilder(SlackMessageBuilder):
             '모락이가 왔습니다! 🙋‍♂️',
         ]
         greetings_end = [
-            '내일의 메뉴를 알려드릴게요! 🍙',
-            '내일의 메뉴를 들고 왔어요! 🍚',
-            '내일 나오는 메뉴가 궁금해서 그새 또 다녀왔어요! 🍽️',
+            '\n내일의 메뉴가 도착했어요! 🍙',
+            '\n내일의 메뉴를 들고 왔답니다! 🍚',
+            '\n내일 나오는 메뉴가 궁금해서 그새 또 다녀왔어요! 🍽️',
         ]
         closings = [
             '오늘 하루도 행복한 하루 되세요! 🥰',
@@ -123,7 +124,9 @@ class TommorowMenuMessageBuilder(SlackMessageBuilder):
             'type': 'section',
             'text': {
                 'type': 'mrkdwn',
-                'text': f'{random.choice(greetings_start)} {random.choice(greetings_end)}'
+                'text': \
+                    f'{random.choice(greetings_start)} \
+내일은 {self._get_tommorow_date_string()}인데요! {random.choice(greetings_end)}'
             },
         }, {
             'type': 'divider'
@@ -134,6 +137,13 @@ class TommorowMenuMessageBuilder(SlackMessageBuilder):
                 'text': random.choice(closings)
             },
         }]
+
+    def _get_tommorow_date_string(self):
+        date = datetime.datetime.utcnow().astimezone(pytz.timezone('Asia/Seoul'))
+        date += datetime.timedelta(days=1)
+        month: int = date.month
+        day: int = date.day
+        return f'{month}월 {day}일'
 
 
 class FridayAfternoonMessageBuilder(SlackMessageBuilder):
@@ -150,9 +160,9 @@ class FridayAfternoonMessageBuilder(SlackMessageBuilder):
             '모락이가 왔습니다! 🙋‍♂️',
         ]
         greetings_end = [
-            '벌써 금요일이네요! 다음주 월요일 메뉴를 알려드릴게요! 🍙',
-            '벌써 금요일이 왔어요!! 다음주 월요일 메뉴를 들고 왔어요! 🍚',
-            '이제 금요일 오후 입니다! 다음주 월요일 메뉴가 궁금해서 그새 또 다녀왔어요! 🍽️',
+            '벌써 금요일이에요! 🙌\n다음주 월요일 메뉴를 알려드릴게요! 🍙',
+            '벌써 금요일입니다! 🙌\n다음주 월요일 메뉴를 들고 왔어요! 🍚',
+            '이제 금요일 오후 입니다! 🙌\n다음주 월요일 메뉴가 궁금해서 그새 또 다녀왔어요! 🍽️',
         ]
         closings = [
             '좋은 주말 되세요! 모락이는 월요일 점심에 다시 찾아오겠습니다 🙇‍♂️',
@@ -163,7 +173,9 @@ class FridayAfternoonMessageBuilder(SlackMessageBuilder):
             'type': 'section',
             'text': {
                 'type': 'mrkdwn',
-                'text': f'{random.choice(greetings_start)} {random.choice(greetings_end)}'
+                'text': \
+                    f'{random.choice(greetings_start)} {random.choice(greetings_end)} \
+ 다음주 월요일은 {self._get_monday_date_string()}이에요!'
             },
         }, {
             'type': 'divider'
@@ -174,3 +186,11 @@ class FridayAfternoonMessageBuilder(SlackMessageBuilder):
                 'text': random.choice(closings)
             },
         }]
+
+    def _get_monday_date_string(self):
+        date = datetime.datetime.utcnow().astimezone(pytz.timezone('Asia/Seoul'))
+        while Weekday(date.weekday()) != Weekday.MONDAY:
+            date += datetime.timedelta(days=1)
+        month: int = date.month
+        day: int = date.day
+        return f'{month}월 {day}일'
