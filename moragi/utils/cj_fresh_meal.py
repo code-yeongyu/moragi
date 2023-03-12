@@ -41,7 +41,7 @@ class CJFreshMealClient:
         return [Menu.from_cj_meal(model) for model in cj_fresh_meal_menu_models]
 
     def get_week_meal(self, week_type: WeekType) -> Optional[WeeklyMenu]:  # type: ignore
-        URL = f'{self.BASE_URL}/week-meal?storeIdx={self.store_id}&weekType={week_type}'
+        URL = f'{self.BASE_URL}/week-meal?storeIdx={self.store_id}&weekType={week_type.value}'
         console.log(f'Retreving URL: {URL}')
 
         raw_response = self.client.get(URL)
