@@ -5,9 +5,9 @@ import pytz
 from typer import Typer
 
 from moragi.cli.cj_fresh_meal_utils import get_today_lunch_with_image, get_today_meal
+from moragi.models import Weekday
 from moragi.models.cj_fresh_meal import WeekType
 from moragi.models.menu import DailyMenu
-from moragi.models.weekday import Weekday
 from moragi.utils.cj_fresh_meal import CJFreshMealClient
 from moragi.utils.slack import (
     FridayAfternoonMessageBuilder,

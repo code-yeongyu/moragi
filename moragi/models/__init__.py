@@ -1,1 +1,1 @@
-from .weekday import Weekday
+from .weekday import Weekday as Weekday

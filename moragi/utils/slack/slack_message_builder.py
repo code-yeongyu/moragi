@@ -5,8 +5,8 @@ from typing import Any
 
 import pytz
 
+from moragi.models import Weekday
 from moragi.models.menu import DailyMenu, Menu
-from moragi.models.weekday import Weekday
 from moragi.utils.slack.blocks import (
     daily_menu_list_block,
     image_menu_list_block,
