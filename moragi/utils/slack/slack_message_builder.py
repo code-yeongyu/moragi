@@ -1,32 +1,26 @@
 import datetime
 import random
-from http import HTTPStatus
+from abc import ABC, abstractmethod
+from typing import Any
 
 import pytz
-from slack_sdk.webhook import WebhookClient
-from slack_sdk.webhook.webhook_response import WebhookResponse
 
 from moragi.models.menu import DailyMenu, Menu
-from moragi.utils import console
 
 
-class MealSummarySender:
+class SlackMessageBuilder(ABC):
 
-    def __init__(self, url: str, daily_menu: DailyMenu):
-        self.url = url
+    @abstractmethod
+    def make_slack_blocks(self) -> list[dict[str, Any]]:
+        pass
+
+
+class MealSummaryMessageBuilder(SlackMessageBuilder):
+
+    def __init__(self, daily_menu: DailyMenu):
         self.daily_menu = daily_menu
 
-    def run(self):
-        webhook = WebhookClient(self.url)
-        console.log('Sending message to Slack')
-        response: WebhookResponse = webhook.send(
-            text='모락이에요!',
-            blocks=self._get_slack_blocks(),
-        )
-        console.log('Sent Message to slack with response', _webhook_response_to_dict(response))
-        assert response.status_code == HTTPStatus.OK.value
-
-    def _get_slack_blocks(self):
+    def make_slack_blocks(self):
         blocks = [{
             'type': 'section',
             'text': {
@@ -103,24 +97,13 @@ _{option.kcal} 칼로리_
         return blocks
 
 
-class LunchWithPhotoSender:
+class LunchWithPhotoMessageBuilder(SlackMessageBuilder):
     '''CJ 프레시밀에 점심 이미지가 약 오전 11시 20분 이후에 업로드 되므로, 해당 시간 이후를 위한 클래스'''
 
-    def __init__(self, url: str, lunch_options: list[Menu]):
-        self.url = url
+    def __init__(self, lunch_options: list[Menu]):
         self.lunch_options = lunch_options
 
-    def run(self):
-        webhook = WebhookClient(self.url)
-        console.log('Sending message to Slack')
-        response: WebhookResponse = webhook.send(
-            text='모락이에요!',
-            blocks=self._get_slack_blocks(),
-        )
-        console.log('Sent Message to slack with response', _webhook_response_to_dict(response))
-        assert response.status_code == HTTPStatus.OK.value
-
-    def _get_slack_blocks(self):
+    def make_slack_blocks(self):
         greetings_start = [
             '안녕하세요! 모락이에요 🙇‍♂️',
             '안녕하세요! 신입사원 모락이에요 🐥 ',
@@ -190,11 +173,3 @@ class LunchWithPhotoSender:
                 }]
             }])
         return blocks
-
-
-def _webhook_response_to_dict(instance: WebhookResponse):
-    return {
-        'api_url': instance.api_url,
-        'status_code': instance.status_code,
-        'body': instance.body,
-    }
