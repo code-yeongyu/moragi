@@ -5,11 +5,10 @@ from typing import Any
 
 import pytz
 
-from moragi.models.menu import DailyMenu, Menu, WeeklyMenu
+from moragi.models.menu import DailyMenu, Menu
 from moragi.utils.slack.blocks import (
     daily_menu_list_block,
     image_menu_list_block,
-    weekly_menu_list_block,
 )
 
 
@@ -136,3 +135,42 @@ class TommorowMenuMessageBuilder(SlackMessageBuilder):
             },
         }]
 
+
+class FridayAfternoonMessageBuilder(SlackMessageBuilder):
+
+    def __init__(self, monday_menu: DailyMenu):
+        self.monday_menu = monday_menu
+
+    def make_slack_blocks(self):
+        greetings_start = [
+            '안녕하세요! 모락이에요 🙇‍♂️',
+            '안녕하세요! 신입사원 모락이에요 🐥 ',
+            '안녕하세요! 모락이입니다 🙋‍♂️',
+            '모락이에요! 🙋‍♂️',
+            '모락이가 왔습니다! 🙋‍♂️',
+        ]
+        greetings_end = [
+            '벌써 금요일이네요! 다음주 월요일 메뉴를 알려드릴게요! 🍙',
+            '벌써 금요일이 왔어요!! 다음주 월요일 메뉴를 들고 왔어요! 🍚',
+            '이제 금요일 오후 입니다! 다음주 월요일 메뉴가 궁금해서 그새 또 다녀왔어요! 🍽️',
+        ]
+        closings = [
+            '좋은 주말 되세요! 모락이는 월요일 점심에 다시 찾아오겠습니다 🙇‍♂️',
+            '주말 잘 보내세요! 모락이는 월요일 점심에 다시 찾아오겠습니다 🙇‍♂️',
+            '주말에 푹 쉬고 월요일에 뵈어요! 🙌',
+        ]
+        return [{
+            'type': 'section',
+            'text': {
+                'type': 'mrkdwn',
+                'text': f'{random.choice(greetings_start)} {random.choice(greetings_end)}'
+            },
+        }, {
+            'type': 'divider'
+        }, *daily_menu_list_block(self.monday_menu), {
+            'type': 'section',
+            'text': {
+                'type': 'mrkdwn',
+                'text': random.choice(closings)
+            },
+        }]
