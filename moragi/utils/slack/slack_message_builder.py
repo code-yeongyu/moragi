@@ -6,6 +6,7 @@ from typing import Any
 import pytz
 
 from moragi.models.menu import DailyMenu, Menu
+from moragi.utils.slack.blocks import image_menu_list_block, simple_menu_list_block
 
 
 class SlackMessageBuilder(ABC):
@@ -38,7 +39,7 @@ class MenuSummaryMessageBuilder(SlackMessageBuilder):
                     'type': 'mrkdwn',
                     'text': '먼저 아침 메뉴부터 알려드릴게요! 🥪'
                 },
-            }] + self._get_options_block(self.daily_menu.breakfast) + [{
+            }] + simple_menu_list_block(self.daily_menu.breakfast) + [{
                 'type': 'divider'
             }])
 
@@ -49,7 +50,7 @@ class MenuSummaryMessageBuilder(SlackMessageBuilder):
                     'type': 'mrkdwn',
                     'text': '그리고 점심 메뉴를 알려드릴게요! 🍚'
                 },
-            }] + self._get_options_block(self.daily_menu.lunch) + [{
+            }] + simple_menu_list_block(self.daily_menu.lunch) + [{
                 'type': 'divider'
             }])
 
@@ -60,7 +61,7 @@ class MenuSummaryMessageBuilder(SlackMessageBuilder):
                     'type': 'mrkdwn',
                     'text': '저녁 메뉴는 다음과 같아요! 🍽️'
                 }
-            }] + self._get_options_block(self.daily_menu.lunch) + [{
+            }] + simple_menu_list_block(self.daily_menu.lunch) + [{
                 'type': 'divider'
             }])
 
@@ -78,23 +79,6 @@ class MenuSummaryMessageBuilder(SlackMessageBuilder):
         month: int = date.month
         day: int = date.day
         return f'{month}월 {day}일'
-
-    def _get_options_block(self, options: list[Menu]) -> list[dict[str, str]]:
-        blocks = []
-        for option in options:
-            blocks.append({
-                'type': 'section',
-                'text': {
-                    'type': 'mrkdwn',
-                    'text': f'''
-*{option.food_type}*
-• {option.name}
-• {option.side}
-_{option.kcal} 칼로리_
-'''[1:]
-                }
-            })
-        return blocks
 
 
 class LunchWithPhotoMessageBuilder(SlackMessageBuilder):
@@ -132,7 +116,7 @@ class LunchWithPhotoMessageBuilder(SlackMessageBuilder):
             },
         }, {
             'type': 'divider'
-        }] + self._get_options_block(self.lunch_options) + [{
+        }] + image_menu_list_block(self.lunch_options) + [{
             'type': 'divider'
         }, {
             'type': 'section',
@@ -143,35 +127,3 @@ class LunchWithPhotoMessageBuilder(SlackMessageBuilder):
         }]
 
         return blocks
-
-    def _get_options_block(self, options: list[Menu]) -> list[dict[str, str]]:
-        blocks = []
-        for option in options:
-            blocks.extend([{
-                'type': 'section',
-                'text': {
-                    'type': 'mrkdwn',
-                    'text': f'''
-*{option.food_type}*
-• {option.name}
-'''[1:]
-                }
-            }, {
-                'type': 'image',
-                'image_url': option.thumbnail_url,
-                'alt_text': option.name
-            }, {
-                'type': 'actions',
-                'elements': [{
-                    'type': 'button',
-                    'text': {
-                        'type': 'plain_text',
-                        'text': '자세히 보러가기',
-                        'action_id': 'button',
-                        'url': option.detail_info_url
-                    }
-                }]
-            }])
-        return blocks
-
-class Afternoon
