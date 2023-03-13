@@ -16,7 +16,7 @@ class SlackMessageSender:
         self.url = url
         self.message_builder = message_builder
 
-    @retry(reraise=True, stop=stop_after_attempt(10), wait=wait_fixed(10))
+    @retry(reraise=True, stop=stop_after_attempt(5), wait=wait_fixed(10))
     def run(self):
         webhook = WebhookClient(self.url)
         blocks = self.message_builder.make_slack_blocks()
@@ -26,7 +26,9 @@ class SlackMessageSender:
             blocks=blocks,
         )
         console.log('Sent Message to slack with response', self._webhook_response_to_dict(response))
-        assert response.status_code == HTTPStatus.OK.value
+        if response.status_code != HTTPStatus.OK.value:
+            raise Exception(
+                f'Error while sending message to slack. response={self._webhook_response_to_dict(response)}')
 
     def _webhook_response_to_dict(self, instance: WebhookResponse):
         return {
