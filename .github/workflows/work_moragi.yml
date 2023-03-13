@@ -46,4 +46,4 @@ jobs:
 
       - name: Run Moragi with specified Slack Webhook URL
         if: github.event.inputs.target_slack_webhook_url != ''
-        run: poetry run python3 -m moragi ${{ github.event.inputs.command }} ${{ vars.CJ_FRESH_MEAL_STORE_ID }} ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: poetry run python3 -m moragi ${{ github.event.inputs.command }} ${{ vars.CJ_FRESH_MEAL_STORE_ID }} ${{ github.event.inputs.target_slack_webhook_url }}
