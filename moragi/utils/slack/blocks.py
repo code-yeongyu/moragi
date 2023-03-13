@@ -38,12 +38,12 @@ def image_menu_block(menu: Menu):
         'type': 'actions',
         'elements': [{
             'type': 'button',
+            'action_id': 'button',
             'text': {
                 'type': 'plain_text',
                 'text': '자세히 보러가기',
-                'action_id': 'button',
-                'url': menu.detail_info_url
-            }
+            },
+            'url': menu.detail_info_url
         }]
     }]
 
