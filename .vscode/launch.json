@@ -13,7 +13,7 @@
             "args": [
                 "${input:command}",
                 "6505",
-                "https://hooks.slack.com/services/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"
+                "https://hooks.slack.com/services/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"
             ]
         }
     ],
