@@ -38,7 +38,7 @@ jobs:
           key: venv-${{ runner.os }}-${{ hashFiles('./poetry.lock') }}
 
       - name: Install Dependencies if cache doesn't hit
-        if: steps.cache.outptus.cache-hit == 'false'
+        if: steps.cache.outputs.cache-hit != 'true'
         run: poetry install
 
       - name: Run Moragi with default Slack Webhook URL
