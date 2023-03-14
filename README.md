@@ -1,13 +1,14 @@
 # 모락이 🍚
 
-모락이는 [CJ 프레시밀](https://front.cjfreshmeal.co.kr/)에서 오늘의 식단 정보를 가져와 슬랙 웹훅을 통해 전송하는 기능을 제공합니다. ✨
-
-cron schedule 설정에 따라 평일 한국시간 8시마다, 11시 반마다 되고있어요. 따라서, 별도의 서버 없이 작동하고 있는 중입니다!
-cron 의 경우에는 github action 의 load 가 높으면 작동하지 않는 문제가 있어 외부 서비스인 cron-job.org 에서 트리거 하는 형식으로 구현되어 있어요. 잘 작동하고있는지 상태를 보려면 [이곳](https://54qwszd1.status.cron-job.org/)을 보면 됩니다.
+모락이는 [CJ 프레시밀](https://front.cjfreshmeal.co.kr/)에서 오늘의 식단 정보를 가져와 슬랙 웹훅을 통해 전송하는 기능을 제공하는 슬랙 봇입니다 ✨
 
 ## 사용처
 
 ![무신사](https://image.msscdn.net/mfile_s01/fb/share_musinsa.png)
+
+- cron schedule 설정에 따라 평일 한국시간 11시 30분, 18시 마다 작동 되고있어요. 따라서, 별도의 서버 없이 작동하고 있는 중입니다!
+  - cron 의 경우에는 github action 의 load 가 높으면 작동하지 않는 문제가 있어 외부 서비스인 cron-job.org 에서 트리거 하는 형식으로 구현되어 있어요.
+  - 잘 작동하고있는지 상태를 보려면 [이곳](https://54qwszd1.status.cron-job.org/)을 보면 됩니다.
 
 _또 사용중이신 곳이 있다면 편하게 Issue 나 PR 로 남겨주세요 !_
 
