@@ -36,7 +36,7 @@ def send_next_menu_summary(cj_fresh_meal_store_id: int, slack_webhook_url: str):
     builder: SlackMessageBuilder
 
     is_today_friday = \
-        datetime.datetime.utcnow().astimezone(pytz.timezone('Asia/Seoul')).weekday() == Weekday.FRIDAY
+        Weekday(datetime.datetime.utcnow().astimezone(pytz.timezone('Asia/Seoul')).weekday()) == Weekday.FRIDAY
     if is_today_friday:
         week_menu = client.get_week_meal(WeekType.NEXT_WEEK)
         if not week_menu:
