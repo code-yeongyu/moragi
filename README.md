@@ -2,7 +2,7 @@
 
 모락이는 [CJ 프레시밀](https://front.cjfreshmeal.co.kr/)에서 오늘의 식단 정보를 가져와 슬랙 웹훅을 통해 전송하는 기능을 제공하는 슬랙 봇입니다 ✨
 
-## 사용처
+## 사용중인 회사들
 
 ![무신사](https://image.msscdn.net/mfile_s01/fb/share_musinsa.png)
 
@@ -25,6 +25,7 @@ _또 사용중이신 곳이 있다면 편하게 Issue 나 PR 로 남겨주세요
 ### 시작 🚀
 
 아래 이미지 처럼 `Use this template` -> `Create a new repository` 를 통해 본 저장소를 복제합니다.
+
 ![clone](https://raw.githubusercontent.com/code-yeongyu/moragi/master/images/clone.png)
 
 복제한 저장소의 `Settings` -> `Secrets` 에서 `SLACK_WEBHOOK_URL` 에 슬랙 웹훅 URL 을 추가해주세요! 그렇다면 아래와 같을것입니다.
