@@ -35,30 +35,26 @@ def send_next_menu_summary(cj_fresh_meal_store_id: int, slack_webhook_url: str):
     client = CJFreshMealClient(cj_fresh_meal_store_id)
     builder: SlackMessageBuilder
 
-    is_today_friday = \
-        Weekday(datetime.datetime.utcnow().astimezone(pytz.timezone('Asia/Seoul')).weekday()) == Weekday.FRIDAY
+    today_weekday = datetime.datetime.utcnow().astimezone(pytz.timezone('Asia/Seoul')).weekday()
+    is_today_friday = today_weekday == Weekday.FRIDAY
     if is_today_friday:
-        week_menu = client.get_week_meal(WeekType.NEXT_WEEK)
-        if not week_menu:
-            raise Exception("Error while getting next week's menu")
-        if not week_menu.monday:
+        weekly_menu = client.get_week_meal(WeekType.NEXT_WEEK)
+        if not weekly_menu.monday:
             raise Exception("Error while getting next week's monday's menu")
-        builder = FridayAfternoonMessageBuilder(week_menu.monday)
+        builder = FridayAfternoonMessageBuilder(weekly_menu.monday)
     else:
-        week_menu = client.get_week_meal(WeekType.THIS_WEEK)
-        if not week_menu:
-            raise Exception('Error while getting next week menu')
-
-        weekday = Weekday(datetime.date.today().weekday())
+        weekly_menu = client.get_week_meal(WeekType.THIS_WEEK)
         tommorow_menu: Optional[DailyMenu] = None
-        if weekday == Weekday.MONDAY:
-            tommorow_menu = week_menu.tuesday
-        elif weekday == Weekday.TUESDAY:
-            tommorow_menu = week_menu.wednesday
-        elif weekday == Weekday.WEDNESDAY:
-            tommorow_menu = week_menu.thursday
-        elif weekday == Weekday.THURSDAY:
-            tommorow_menu = week_menu.friday
+        if today_weekday == Weekday.MONDAY:
+            tommorow_menu = weekly_menu.tuesday
+        elif today_weekday == Weekday.TUESDAY:
+            tommorow_menu = weekly_menu.wednesday
+        elif today_weekday == Weekday.WEDNESDAY:
+            tommorow_menu = weekly_menu.thursday
+        elif today_weekday == Weekday.THURSDAY:
+            tommorow_menu = weekly_menu.friday
+        else:
+            raise Exception('Today is not supported day')
 
         if not tommorow_menu:
             raise Exception("Error while getting tommorow's menu")
