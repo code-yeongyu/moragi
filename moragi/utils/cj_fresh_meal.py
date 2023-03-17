@@ -42,7 +42,7 @@ class CJFreshMealClient:
         return [Menu.from_cj_meal(model) for model in cj_fresh_meal_menu_models]
 
     @retry(reraise=True, stop=stop_after_attempt(10), wait=wait_fixed(10))
-    def get_week_meal(self, week_type: WeekType) -> WeeklyMenu:  # type: ignore
+    def get_week_meal(self, week_type: WeekType) -> WeeklyMenu:
         URL = f'{self.BASE_URL}/week-meal?storeIdx={self.store_id}&weekType={week_type.value}'
         console.log(f'Retreving URL: {URL}')
 
