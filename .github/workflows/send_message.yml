@@ -1,0 +1,49 @@
+name: 모락이로 메시지 보내기
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: "보낼 메시지 명령어.\n\n`moragi send-message` 명령어의 인자로 사용합니다."
+        required: true
+        type: string
+      target_slack_webhook_url:
+        description: "메시지를 보낼 슬랙 웹훅 URL.\n\n없을 경우 secret 에 설정된 프로젝트 기본 값으로 보내집니다."
+        required: false
+        type: string
+      confirm_production_send:
+        description: "#냠냠 채널로 메시지 보내기.\n\n체크시 `target_slack_webhook_url` 이 지정되지 않았을때만 메시지가 보내집니다."
+        type: boolean
+
+jobs:
+  moragi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Setup Poetry
+        uses: abatilo/actions-poetry@v2
+
+      - name: Cache Dependencies
+        uses: actions/cache@v3
+        id: cache
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('./poetry.lock') }}
+
+      - name: Install Dependencies if cache doesn't hit
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: poetry install
+
+      - name: Run Moragi with default Slack Webhook URL
+        if: github.event.inputs.target_slack_webhook_url == '' && github.event.inputs.confirm_production_send == 'true'
+        run: poetry run python3 -m moragi send-message ${{ github.event.inputs.message }} ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Run Moragi with specified Slack Webhook URL
+        if: github.event.inputs.target_slack_webhook_url != '' && github.event.inputs.confirm_production_send != 'true'
+        run: poetry run python3 -m moragi send-message ${{ github.event.inputs.message }} ${{ github.event.inputs.target_slack_webhook_url }}

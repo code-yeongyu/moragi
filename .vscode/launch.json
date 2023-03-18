@@ -15,6 +15,18 @@
                 "6505",
                 "${env:MORAGI_SLACK_WEBHOOK_URL}"
             ]
+        },
+        {
+            "name": "모락이 메시지 전송",
+            "type": "python",
+            "request": "launch",
+            "module": "moragi",
+            "justMyCode": true,
+            "args": [
+                "send-message",
+                "${input:message}",
+                "${env:MORAGI_SLACK_WEBHOOK_URL}"
+            ]
         }
     ],
     "inputs": [
@@ -22,6 +34,11 @@
             "id": "command",
             "type": "promptString",
             "description": "실행 할 명령 타입. `moragi/cli/commands.py` 에 존재하는 명령어 이름을 입력해주세요."
+        },
+        {
+            "id": "message",
+            "type": "promptString",
+            "description": "보낼 메시지 텍스트를 입력해주세요."
         }
     ]
 }

@@ -14,6 +14,7 @@ from moragi.utils.slack import (
     LunchWithPhotoMessageBuilder,
     SlackMessageBuilder,
     SlackMessageSender,
+    TextMessageBuilder,
     TommorowMenuMessageBuilder,
 )
 
@@ -60,5 +61,12 @@ def send_next_menu_summary(cj_fresh_meal_store_id: int, slack_webhook_url: str):
             raise Exception("Error while getting tommorow's menu")
         builder = TommorowMenuMessageBuilder(tommorow_menu)
 
+    sender = SlackMessageSender(slack_webhook_url, builder)
+    sender.run()
+
+
+@cli_app.command()
+def send_message(message: str, slack_webhook_url: str):
+    builder = TextMessageBuilder(message)
     sender = SlackMessageSender(slack_webhook_url, builder)
     sender.run()

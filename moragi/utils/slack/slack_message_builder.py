@@ -194,3 +194,18 @@ class FridayAfternoonMessageBuilder(SlackMessageBuilder):
         month: int = date.month
         day: int = date.day
         return f'{month}월 {day}일'
+
+
+class TextMessageBuilder(SlackMessageBuilder):
+
+    def __init__(self, message: str):
+        self.message = message
+
+    def make_slack_blocks(self):
+        return [{
+            'type': 'section',
+            'text': {
+                'type': 'mrkdwn',
+                'text': self.message,
+            },
+        }]
