@@ -32,7 +32,7 @@ def image_menu_block(menu: Menu):
         }
     }, {
         'type': 'image',
-        'image_url': menu.thumbnail_url,
+        'image_url': menu.resized_thumbnail_url,
         'alt_text': menu.name
     }, {
         'type': 'actions',

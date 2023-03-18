@@ -15,6 +15,11 @@ class Menu(BaseModel):
     kcal: int
     status: int
 
+    @property
+    def resized_thumbnail_url(self):
+        WIDTH = 1200
+        return f'https://wsrv.nl/?w={WIDTH}&url={self.thumbnail_url}'
+
     @classmethod
     def from_cj_meal(cls, cj_fresh_meal: Meal):
         CJ_FRESH_MEAL_DETAIL_URL = f'https://front.cjfreshmeal.co.kr/menu/detail/{cj_fresh_meal.meal_index}'
