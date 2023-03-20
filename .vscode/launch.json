@@ -24,7 +24,7 @@
             "justMyCode": true,
             "args": [
                 "send-message",
-                "${input:message}",
+                "'${input:message}'",
                 "${env:MORAGI_SLACK_WEBHOOK_URL}"
             ]
         }
