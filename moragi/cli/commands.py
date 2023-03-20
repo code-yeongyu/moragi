@@ -4,7 +4,7 @@ from typing import Optional
 import pytz
 from typer import Typer
 
-from moragi.cli.cj_fresh_meal_utils import get_today_lunch_with_image
+from moragi.cli.cj_fresh_meal_utils import get_today_lunch_with_image, get_today_meal
 from moragi.models import Weekday
 from moragi.models.cj_fresh_meal import WeekType
 from moragi.models.menu import DailyMenu
@@ -12,6 +12,7 @@ from moragi.utils.cj_fresh_meal import CJFreshMealClient
 from moragi.utils.slack import (
     FridayAfternoonMessageBuilder,
     LunchWithPhotoMessageBuilder,
+    MenuSummaryMessageBuilder,
     SlackMessageBuilder,
     SlackMessageSender,
     TextMessageBuilder,
@@ -62,6 +63,17 @@ def send_next_menu_summary(cj_fresh_meal_store_id: int, slack_webhook_url: str):
             raise Exception("Error while getting tommorow's menu")
         builder = TommorowMenuMessageBuilder(tommorow_menu)
 
+    sender = SlackMessageSender(slack_webhook_url, builder)
+    sender.run()
+
+
+@cli_app.command()
+def send_today_menu_summary(cj_fresh_meal_store_id: int, slack_webhook_url: str):
+    # only for manual execution when needed
+
+    daily_menu = get_today_meal(cj_fresh_meal_store_id)
+
+    builder = MenuSummaryMessageBuilder(daily_menu)
     sender = SlackMessageSender(slack_webhook_url, builder)
     sender.run()
 
