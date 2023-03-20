@@ -11,7 +11,7 @@ def get_today_meal(cj_fresh_meal_store_id: int):
     return daily_menu
 
 
-@retry(reraise=True, stop=stop_after_attempt(3), wait=wait_fixed(60 * 10))
+@retry(reraise=True, stop=stop_after_attempt(20), wait=wait_fixed(60))
 def get_today_lunch_with_image(cj_fresh_meal_store_id: int):
     daily_menu = get_today_meal(cj_fresh_meal_store_id)
     lunch_first_option_thumbnail = daily_menu.lunch[0].thumbnail_url
