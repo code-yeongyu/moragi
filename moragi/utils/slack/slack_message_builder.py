@@ -67,14 +67,7 @@ class LunchWithPhotoMessageBuilder(SlackMessageBuilder):
             '오늘도 몰래가서 슬쩍 📸',
             '배고프시죠?! 그럴줄 알고 메뉴를 찍어왔답니다 📸',
         ]
-        closes = [
-            '식사 맛있게 하세요 😋',
-            '저는 이만 가볼게요! 🙋‍♂️',
-            '모락이는 또 돌아오겠습니다! 🙌',
-            '으악 나도 먹고싶다 😋',
-            '저는 로봇일텐데 왜 사진보니까 배가 고플까요 🤔',
-            '우와 오늘 진짜 맛있어보여요 🍚',
-        ]
+        menu_emoji = [':백반먹을래영:', ':스페셜먹을래영:', ':텤아웃할래영:']
 
         return [{
             'type': 'section',
@@ -90,7 +83,7 @@ class LunchWithPhotoMessageBuilder(SlackMessageBuilder):
             'type': 'section',
             'text': {
                 'type': 'mrkdwn',
-                'text': random.choice(closes)
+                'text': f'오늘 모락이는 {random.choice(menu_emoji)} 먹으려는데, 다른 분들은 어떤 메뉴 드실건가요 !! :직장인최대난제:'
             }
         }]
 
