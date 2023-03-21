@@ -1,5 +1,4 @@
 import datetime
-import json
 import logging
 import typing
 from typing import Final, Optional
@@ -29,10 +28,8 @@ class CJFreshMealClient:
     )
     def get_today_meal(self) -> DailyMenu:
         URL = f'{self.BASE_URL}/today-all-meal?storeIdx={self.store_id}'
-        logger.info(f'Retreving URL: {URL}')
-
         raw_response = self.client.get(URL)
-        logger.info(f'Retrieved Response: {json.dumps(raw_response.text)}')
+        logger.debug(f'Retrieved Response: {raw_response.json()}')
 
         response: Final[TodayAllMealResponse] = TodayAllMealResponse.parse_raw(raw_response.text)
 
@@ -55,10 +52,8 @@ class CJFreshMealClient:
     )
     def get_week_meal(self, week_type: WeekType) -> WeeklyMenu:
         URL = f'{self.BASE_URL}/week-meal?storeIdx={self.store_id}&weekType={week_type.value}'
-        logger.info(f'Retreving URL: {URL}')
-
         raw_response = self.client.get(URL)
-        logger.info(f'Retrieved Response: {json.dumps(raw_response.text)}')
+        logger.info(f'Retrieved Response: {raw_response.json()}')
 
         response = WeekMealResponse.parse_raw(raw_response.text)
 
