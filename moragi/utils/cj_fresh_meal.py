@@ -20,7 +20,13 @@ class CJFreshMealClient:
         self.store_id = store_id
         self.client = httpx.Client()
 
-    @retry(reraise=True, stop=stop_after_attempt(10), wait=wait_fixed(10))
+    @retry(
+        reraise=True,
+        before_sleep=before_sleep_log(logger, logging.DEBUG),
+        after=after_log(logger, logging.INFO),
+        stop=stop_after_attempt(10),
+        wait=wait_fixed(10),
+    )
     def get_today_meal(self) -> DailyMenu:
         URL = f'{self.BASE_URL}/today-all-meal?storeIdx={self.store_id}'
         logger.info(f'Retreving URL: {URL}')
@@ -40,7 +46,13 @@ class CJFreshMealClient:
             return typing.cast(list[Menu], [])
         return [Menu.from_cj_meal(model) for model in cj_fresh_meal_menu_models]
 
-    @retry(reraise=True, stop=stop_after_attempt(10), wait=wait_fixed(10))
+    @retry(
+        reraise=True,
+        before_sleep=before_sleep_log(logger, logging.DEBUG),
+        after=after_log(logger, logging.DEBUG),
+        stop=stop_after_attempt(10),
+        wait=wait_fixed(10),
+    )
     def get_week_meal(self, week_type: WeekType) -> WeeklyMenu:
         URL = f'{self.BASE_URL}/week-meal?storeIdx={self.store_id}&weekType={week_type.value}'
         logger.info(f'Retreving URL: {URL}')
