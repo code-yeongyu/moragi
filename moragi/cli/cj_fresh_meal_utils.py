@@ -21,7 +21,8 @@ def get_today_meal(cj_fresh_meal_store_id: int):
 )
 def get_today_lunch_with_image(cj_fresh_meal_store_id: int):
     daily_menu = get_today_meal(cj_fresh_meal_store_id)
-    lunch_first_option_thumbnail = daily_menu.lunch[0].thumbnail_url
-    if not lunch_first_option_thumbnail:
-        raise Exception('No image found')
+    for lunch_option in daily_menu.lunch:
+        if not lunch_option.thumbnail_url:
+            raise Exception('No image found')
+
     return daily_menu.lunch
