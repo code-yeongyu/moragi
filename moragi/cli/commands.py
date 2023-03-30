@@ -16,7 +16,7 @@ from moragi.utils.slack import (
     SlackMessageBuilder,
     SlackMessageSender,
     TextMessageBuilder,
-    TommorowMenuMessageBuilder,
+    TomorrowMenuMessageBuilder,
 )
 
 cli_app = Typer()
@@ -47,21 +47,21 @@ def send_next_menu_summary(cj_fresh_meal_store_id: int, slack_webhook_url: str):
         builder = FridayAfternoonMessageBuilder(weekly_menu.monday)
     else:
         weekly_menu = client.get_week_meal(WeekType.THIS_WEEK)
-        tommorow_menu: Optional[DailyMenu] = None
+        tomorrow_menu: Optional[DailyMenu] = None
         if today_weekday == Weekday.MONDAY:
-            tommorow_menu = weekly_menu.tuesday
+            tomorrow_menu = weekly_menu.tuesday
         elif today_weekday == Weekday.TUESDAY:
-            tommorow_menu = weekly_menu.wednesday
+            tomorrow_menu = weekly_menu.wednesday
         elif today_weekday == Weekday.WEDNESDAY:
-            tommorow_menu = weekly_menu.thursday
+            tomorrow_menu = weekly_menu.thursday
         elif today_weekday == Weekday.THURSDAY:
-            tommorow_menu = weekly_menu.friday
+            tomorrow_menu = weekly_menu.friday
         else:
             raise Exception('Today is not supported day')
 
-        if not tommorow_menu:
+        if not tomorrow_menu:
             raise Exception("Error while getting tommorow's menu")
-        builder = TommorowMenuMessageBuilder(tommorow_menu)
+        builder = TomorrowMenuMessageBuilder(tomorrow_menu)
 
     sender = SlackMessageSender(slack_webhook_url, builder)
     sender.run()
