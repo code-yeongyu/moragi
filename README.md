@@ -37,7 +37,7 @@ _또 사용중이신 곳이 있다면 편하게 Issue 나 PR 로 남겨주세요
 이제는 지금 회사의 식당 정보를 등록해야 하는데요! curl 와 jq 를 이용해서 `CJ_FRESH_MEAL_STORE_ID` 를 알아내야 합니다. 없다면 미리 설치해주시고, 다음의 명령어를 입력해주세요!
 
 ```sh
-curl 'https://front.cjfreshmeal.co.kr/store/v1/search-store?page=1&schKey=<회사명>isList=false' | jq '.data.storeList[0].idx'
+curl 'https://front.cjfreshmeal.co.kr/store/v1/search-store?page=1&schKey=<회사명>&isList=false' | jq '.data.storeList[0].idx'
 ```
 
 그러면 아래 사진과 같이, 결과값이 나옵니다. 이 중 숫자값만 복사해주세요.
@@ -48,7 +48,7 @@ curl 'https://front.cjfreshmeal.co.kr/store/v1/search-store?page=1&schKey=<회�
 
 ![variables](https://raw.githubusercontent.com/code-yeongyu/moragi/master/images/actions-variables.png)
 
-이제 모두 설정이 끝났습니다! 이제 아래 사진처럼 `Actions` -> `일해라 모락이` -> `Run workflow` 을 통해 실행해보세요! 혹은 설정된 cron schedule 에 따라 자동으로 실행됩니다. 기본값은 평일 9시입니다!
+이제 모두 설정이 끝났습니다! 이제 아래 사진처럼 `Actions` -> `일해라 모락이` -> `Run workflow` 을 통해 확인해 볼 수 있습니다!
 
 ![work-moragi](https://raw.githubusercontent.com/code-yeongyu/moragi/master/images/work-moragi.png)
 
