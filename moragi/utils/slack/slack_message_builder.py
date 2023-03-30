@@ -95,7 +95,7 @@ class LunchWithPhotoMessageBuilder(SlackMessageBuilder):
         }]
 
 
-class TommorowMenuMessageBuilder(SlackMessageBuilder):
+class TomorrowMenuMessageBuilder(SlackMessageBuilder):
 
     def __init__(self, tommorow_menu: DailyMenu):
         self.daily_menu = tommorow_menu
