@@ -98,7 +98,7 @@ def daily_menu_list_block(daily_menu: DailyMenu) -> SLACK_BLOCK_TYPE:
                 'type': 'mrkdwn',
                 'text': '저녁 메뉴는 다음과 같아요! 🍽️'
             }
-        }] + simple_menu_list_block(daily_menu.lunch) + [{
+        }] + simple_menu_list_block(daily_menu.dinner) + [{
             'type': 'divider'
         }]
 
