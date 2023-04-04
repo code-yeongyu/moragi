@@ -7,7 +7,8 @@ on:
         required: true
         type: choice
         options:
-          - send-daily-menu-summary-with-photo
+          - send-lunch-menu-summary-with-photo
+          - send-dinner-menu-summary-with-photo
           - send-next-menu-summary
           - send-today-menu-summary
       target_slack_webhook_url:
