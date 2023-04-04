@@ -49,7 +49,7 @@ class MenuSummaryMessageBuilder(SlackMessageBuilder):
         return f'{month}월 {day}일'
 
 
-class LunchWithPhotoMessageBuilder(SlackMessageBuilder):
+class MenuWithPhotoMessageBuilder(SlackMessageBuilder):
     '''CJ 프레시밀에 점심 이미지가 약 오전 11시 20분 이후에 업로드 되므로, 해당 시간 이후를 위한 클래스'''
 
     def __init__(self, lunch_menu_list: list[Menu]):
@@ -63,9 +63,9 @@ class LunchWithPhotoMessageBuilder(SlackMessageBuilder):
             '반갑습니다! 모락이에요 🙋‍♂️',
         ]
         greetings_end = [
-            '점심 메뉴가 준비된거같아 살짝 가서 찍어왔어요 📸',
+            '식사가 준비된거같아 살짝 가서 찍어왔어요 📸',
             '오늘도 몰래가서 슬쩍 📸',
-            '배고프시죠?! 그럴줄 알고 점심 메뉴를 찍어왔답니다 📸',
+            '배고프시죠?! 그럴줄 알고 메뉴를 찍어왔답니다 📸',
         ]
         closes = [
             '식사 맛있게 하세요 😋',
