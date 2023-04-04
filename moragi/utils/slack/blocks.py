@@ -63,6 +63,28 @@ _{menu.kcal} 칼로리_
     } for menu in menu_list]
 
 
+def section_menu_list_block(menu_list: list[Menu]):
+
+    def _side_to_string(side: str) -> str:
+        items = side.split(', ')
+        formatted_items = [f'• {item}' for item in items]
+        formatted_string = '\n'.join(formatted_items)
+        return formatted_string
+
+    return [{
+        'type': 'section',
+        'fields': [{
+            'type': 'mrkdwn',
+            'text': f'''
+*{menu.food_type}*
+• {menu.name}
+{_side_to_string(menu.side)}
+_{menu.kcal} 칼로리_
+'''[1:],
+        } for menu in menu_list]
+    }]
+
+
 def image_menu_list_block(menu_list: list[Menu]):
     return [block for menu in menu_list for block in image_menu_block(menu)]
 
