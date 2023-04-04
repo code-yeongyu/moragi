@@ -26,4 +26,4 @@ def get_menu_with_image(cj_fresh_meal_store_id: int, is_lunch: bool = True):
         if not option.thumbnail_url:
             raise Exception('No image found')
 
-    return daily_menu.lunch
+    return options
