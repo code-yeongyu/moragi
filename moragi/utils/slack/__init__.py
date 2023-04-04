@@ -1,6 +1,7 @@
+from .slack_message_builder import DinnerWithPhotoMessageBuilder as DinnerWithPhotoMessageBuilder
 from .slack_message_builder import FridayAfternoonMessageBuilder as FridayAfternoonMessageBuilder
+from .slack_message_builder import LunchWithPhotoMessageBuilder as LunchWithPhotoMessageBuilder
 from .slack_message_builder import MenuSummaryMessageBuilder as MenuSummaryMessageBuilder
-from .slack_message_builder import MenuWithPhotoMessageBuilder as MenuWithPhotoMessageBuilder
 from .slack_message_builder import SlackMessageBuilder as SlackMessageBuilder
 from .slack_message_builder import TextMessageBuilder as TextMessageBuilder
 from .slack_message_builder import TomorrowMenuMessageBuilder as TomorrowMenuMessageBuilder

@@ -49,7 +49,7 @@ class MenuSummaryMessageBuilder(SlackMessageBuilder):
         return f'{month}월 {day}일'
 
 
-class MenuWithPhotoMessageBuilder(SlackMessageBuilder):
+class LunchWithPhotoMessageBuilder(SlackMessageBuilder):
     '''CJ 프레시밀에 점심 이미지가 약 오전 11시 20분 이후에 업로드 되므로, 해당 시간 이후를 위한 클래스'''
 
     def __init__(self, lunch_menu_list: list[Menu]):
@@ -85,6 +85,52 @@ class MenuWithPhotoMessageBuilder(SlackMessageBuilder):
         }, {
             'type': 'divider'
         }, *image_menu_list_block(self.lunch_menu_list), {
+            'type': 'divider'
+        }, {
+            'type': 'section',
+            'text': {
+                'type': 'mrkdwn',
+                'text': random.choice(closes)
+            }
+        }]
+
+
+class DinnerWithPhotoMessageBuilder(SlackMessageBuilder):
+    '''CJ 프레시밀에 점심 이미지가 약 오전 11시 20분 이후에 업로드 되므로, 해당 시간 이후를 위한 클래스'''
+
+    def __init__(self, dinner_menu_list: list[Menu]):
+        self.dinner_menu_list = dinner_menu_list
+
+    def make_slack_blocks(self):
+        greetings_start = [
+            '안녕하세요! 모락이에요 🙇‍♂️',
+            '안녕하세요! 신입사원 모락이에요 🐥 ',
+            '안녕하세요! 모락이입니다 🙋‍♂️',
+            '반갑습니다! 모락이에요 🙋‍♂️',
+        ]
+        greetings_end = [
+            '저녁이 준비된거같아 살짝 가서 찍어왔어요 📸',
+            '저녁메뉴도 몰래가서 슬쩍 📸',
+            '배고프시죠?! 그럴줄 알고 저녁 메뉴를 찍어왔답니다 📸',
+        ]
+        closes = [
+            '식사 맛있게 하세요 😋',
+            '저는 이만 가볼게요! 🙋‍♂️',
+            '모락이는 또 돌아오겠습니다! 🙌',
+            '으악 나도 먹고싶다 😋',
+            '저는 로봇일텐데 왜 사진보니까 배가 고플까요 🤔',
+            '우와 오늘 진짜 맛있어보여요 🍚',
+        ]
+
+        return [{
+            'type': 'section',
+            'text': {
+                'type': 'mrkdwn',
+                'text': f'{random.choice(greetings_start)} {random.choice(greetings_end)}'
+            },
+        }, {
+            'type': 'divider'
+        }, *image_menu_list_block(self.dinner_menu_list), {
             'type': 'divider'
         }, {
             'type': 'section',

@@ -10,9 +10,10 @@ from moragi.models.cj_fresh_meal import WeekType
 from moragi.models.menu import DailyMenu
 from moragi.utils.cj_fresh_meal import CJFreshMealClient
 from moragi.utils.slack import (
+    DinnerWithPhotoMessageBuilder,
     FridayAfternoonMessageBuilder,
+    LunchWithPhotoMessageBuilder,
     MenuSummaryMessageBuilder,
-    MenuWithPhotoMessageBuilder,
     SlackMessageBuilder,
     SlackMessageSender,
     TextMessageBuilder,
@@ -24,8 +25,8 @@ cli_app = Typer()
 
 @cli_app.command()
 def send_daily_menu_summary_with_photo(cj_fresh_meal_store_id: int, slack_webhook_url: str, is_lunch: bool):
-    lunch_options = get_menu_with_image(cj_fresh_meal_store_id, is_lunch=is_lunch)
-    builder = MenuWithPhotoMessageBuilder(lunch_options)
+    options = get_menu_with_image(cj_fresh_meal_store_id, is_lunch=is_lunch)
+    builder = LunchWithPhotoMessageBuilder(options) if is_lunch else DinnerWithPhotoMessageBuilder(options)
     sender = SlackMessageSender(slack_webhook_url, builder)
     sender.run()
 
