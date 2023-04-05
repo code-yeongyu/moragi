@@ -76,10 +76,9 @@ def section_menu_list_block(menu_list: list[Menu]):
         'fields': [{
             'type': 'mrkdwn',
             'text': f'''
-*{menu.food_type}*
+*{menu.food_type}* _{menu.kcal} 칼로리_
 • {menu.name}
 {_side_to_string(menu.side)}
-_{menu.kcal} 칼로리_
 '''[1:],
         } for menu in menu_list]
     }]
