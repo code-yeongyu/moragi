@@ -21,19 +21,25 @@ on:
 
 jobs:
   moragi:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Install poetry
-        run: pipx install poetry
       - name: Set up Python 3.9
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
-          cache: poetry
-      - name: Install Dependencies
+      - name: Setup Poetry
+        uses: abatilo/actions-poetry@v2
+      - name: Cache Dependencies
+        uses: actions/cache@v3
+        id: cache
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('./poetry.lock') }}
+      - name: Install Dependencies if cache doesn't hit
+        if: steps.cache.outputs.cache-hit != 'true'
         run: poetry install
 
       - name: Run Moragi with default Slack Webhook URL
