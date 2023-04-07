@@ -13,16 +13,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
+          cache: "poetry"
       - name: Setup Poetry
         uses: abatilo/actions-poetry@v2
-      - name: Cache Dependencies
-        uses: actions/cache@v3
-        id: cache
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('./poetry.lock') }}
-      - name: Install Dependencies if cache doesn't hit
-        if: steps.cache.outputs.cache-hit != 'true'
+      - name: Install Dependencies
         run: poetry install
 
       - name: Run test
@@ -38,16 +32,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
+          cache: "poetry"
       - name: Setup Poetry
         uses: abatilo/actions-poetry@v2
-      - name: Cache Dependencies
-        uses: actions/cache@v3
-        id: cache
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('./poetry.lock') }}
-      - name: Install Dependencies if cache doesn't hit
-        if: steps.cache.outputs.cache-hit != 'true'
+      - name: Install Dependencies
         run: poetry install
 
       - name: Check Code Styles
