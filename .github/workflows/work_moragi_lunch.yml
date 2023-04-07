@@ -10,4 +10,6 @@ jobs:
         with:
           fetch-depth: 0
       - name: Trigger workflow
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh workflow run work_moragi.yml -f command=send-today-menu-summary -f target_slack_webhook_url=test
