@@ -1,7 +1,7 @@
-name: 일해라 모락이 | 점심 메뉴 사진
+name: 일해라 모락이 | 저녁 메뉴 사진
 on:
   schedule:
-    - cron: "20 2 * * 1-5" # KST 11:20
+    - cron: "50 8 * * 1-5" # KST 17:50
 
 jobs:
   moragi:
@@ -14,4 +14,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # triggers .github/workflows/work_moragi.yml
-        run: gh workflow run work_moragi.yml -f command=send-lunch-menu-summary-with-photo -f confirm_production_send=true
+        run: gh workflow run work_moragi.yml -f command=send-dinner-menu-summary-with-photo -f confirm_production_send=true

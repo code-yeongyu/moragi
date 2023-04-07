@@ -1,0 +1,18 @@
+name: 일해라 모락이 | 다음 메뉴 요약
+on:
+  schedule:
+    - cron: "30 9 * * 1-5" # KST 18:30
+    - cron: "0 23 * * 0" # KST 08:00, 월요일만. 금요일 저녁에 그 다음주의 메뉴가 올라오지 않았을 경우를 대비합니다.
+
+jobs:
+  moragi:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Trigger workflow
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # triggers .github/workflows/work_moragi.yml
+        run: gh workflow run work_moragi.yml -f command=send-next-menu-summary -f confirm_production_send=true
