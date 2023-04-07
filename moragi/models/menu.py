@@ -10,7 +10,7 @@ class Menu(BaseModel):
     detail_info_url: str
     food_type: str
     name: str
-    side: str
+    side: Optional[str]
     thumbnail_url: str
     kcal: int
     status: int

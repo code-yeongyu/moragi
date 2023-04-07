@@ -7,7 +7,7 @@ class Meal(BaseModel):
     meal_index: int = Field(alias='mealIdx')
     mbr_meal_idx: int = Field(alias='mbrMealIdx')
     name: str
-    side: str
+    side: Optional[str]
     kcal: int
     carb: float
     protein: float
