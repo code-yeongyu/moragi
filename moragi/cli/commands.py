@@ -34,20 +34,17 @@ def send_daily_menu_summary_with_photo(cj_fresh_meal_store_id: int, slack_webhoo
 @cli_app.command()
 def send_lunch_menu_summary_with_photo(cj_fresh_meal_store_id: int, slack_webhook_url: str):
     # alias of send_daily_menu_summary_with_photo
-    # https://console.cron-job.org/jobs/4229777 (20 11 * * 1-5)
     send_daily_menu_summary_with_photo(cj_fresh_meal_store_id, slack_webhook_url, is_lunch=True)
 
 
 @cli_app.command()
 def send_dinner_menu_summary_with_photo(cj_fresh_meal_store_id: int, slack_webhook_url: str):
     # alias of send_daily_menu_summary_with_photo
-    # https://console.cron-job.org/jobs/4233822 (50 17 * * 1-5)
     send_daily_menu_summary_with_photo(cj_fresh_meal_store_id, slack_webhook_url, is_lunch=False)
 
 
 @cli_app.command()
 def send_next_menu_summary(cj_fresh_meal_store_id: int, slack_webhook_url: str):
-    # https://console.cron-job.org/jobs/4262920 (30 18 * * 1-5)
     client = CJFreshMealClient(cj_fresh_meal_store_id)
     builder: SlackMessageBuilder
 
@@ -83,8 +80,6 @@ def send_next_menu_summary(cj_fresh_meal_store_id: int, slack_webhook_url: str):
 
 @cli_app.command()
 def send_today_menu_summary(cj_fresh_meal_store_id: int, slack_webhook_url: str):
-    # https://console.cron-job.org/jobs/4251142 (0 8 * * 1)
-    # just in case if the menu is not uploaded on Friday, send the menu on Monday morning
     daily_menu = get_today_meal(cj_fresh_meal_store_id)
 
     builder = MenuSummaryMessageBuilder(daily_menu)
