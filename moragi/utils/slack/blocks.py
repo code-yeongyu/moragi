@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 
 from moragi.models.menu import DailyMenu, Menu
 
@@ -33,9 +33,15 @@ def image_menu_block(menu: Menu):
     }]
 
 
+def image_menu_list_block(menu_list: list[Menu]):
+    return [block for menu in menu_list for block in image_menu_block(menu)]
+
+
 def section_menu_list_block(menu_list: list[Menu]):
 
-    def _side_to_string(side: str) -> str:
+    def _side_to_string(side: Optional[str]) -> str:
+        if not side:
+            return ''
         items = side.split(', ')
         formatted_items = [f'• {item}' for item in items]
         formatted_string = '\n'.join(formatted_items)
@@ -52,10 +58,6 @@ def section_menu_list_block(menu_list: list[Menu]):
 '''[1:],
         } for menu in menu_list]
     }]
-
-
-def image_menu_list_block(menu_list: list[Menu]):
-    return [block for menu in menu_list for block in image_menu_block(menu)]
 
 
 def daily_menu_list_block(daily_menu: DailyMenu) -> SLACK_BLOCK_TYPE:
