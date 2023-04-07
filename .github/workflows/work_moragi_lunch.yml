@@ -1,7 +1,5 @@
 name: 일해라 모락이 점심이다 점심
 on:
-  schedule:
-    - cron: "0 12 * * *"
   workflow_dispatch:
 
 jobs:
